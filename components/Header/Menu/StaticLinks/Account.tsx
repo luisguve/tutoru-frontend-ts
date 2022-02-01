@@ -10,7 +10,7 @@ export const Mobile = () => {
   return (
     <>
       <li className="nav-item d-lg-none">
-        <Link href="/cuenta">
+        <Link href="/my-learning">
           <a className="nav-link">
             My learning
           </a>

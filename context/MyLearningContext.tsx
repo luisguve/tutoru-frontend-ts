@@ -49,7 +49,7 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
     try {
       setLoading(true)
 
-      const url = `${STRAPI}/api/masterclass/my-learning`
+      const url = `${STRAPI}/api/masterclass/my-items-purchased`
       const res = await fetch(url, {
         headers: {
           "Authorization": `Bearer ${user.token}`

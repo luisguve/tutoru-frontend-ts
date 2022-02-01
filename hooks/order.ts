@@ -19,7 +19,7 @@ export interface IOrder {
 * De ser asi, limpia los ejercicios IDS del localStorage para que en el proximo reload
 * se carguen nuevamente.
 */
-export const useOrder = (checkout_session: string) => {
+export const useOrder = (checkout_session: string  | string[] | undefined) => {
   const [order, setOrder] = useState<IOrder | null>(null)
   const [loadingOrder, setLoading] = useState(true)
 

@@ -73,7 +73,7 @@ const Payment = () => {
                 </tr>
               </tbody>
             </table>
-            <p>You can get the history of your purchases in your <Link href="/cuenta"><a>account</a></Link></p>
+            <Link href="/my-learning"><a>Ready to start learning?</a></Link>
           </>
         }
       </div>

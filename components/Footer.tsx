@@ -11,7 +11,7 @@ const Footer = () => {
       {
         user &&
         <p className="user-info small">
-          <Link href="/cuenta"><a>Iniciaste como {user.email}</a></Link>
+          <Link href="/my-learning"><a>Logged in as {user.email}</a></Link>
         </p>
       }
       <p className="m-0 fs-6">Tutor universitario - copyright 2021</p>
