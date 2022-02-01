@@ -1,0 +1,36 @@
+.carta .botones {
+  @media screen and (min-width: 541px) {
+    a, button, p {
+      width: 50%;
+    }
+  }
+}
+.botones {
+  @media screen and (max-width: 540px) {
+    a, button, p {
+      width: 50%;
+    }
+  }
+}
+.carousel-item-content {
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+}
+@media screen and (min-width: 992px) {
+  .carousel:hover .carousel-caption {
+    opacity: 0.1;
+  }
+  .carousel-caption:hover {
+    opacity: 1!important;
+  }
+  .carousel-caption {
+    -webkit-transition: opacity 0.15s ease-in-out;
+    transition: opacity 0.15s ease-in-out;
+  }
+}
+@media screen and (max-width: 540px) {
+  .carousel-item {
+    height: 22rem;
+    background: rgb(37,38,38);
+  }
+}

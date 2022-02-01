@@ -1,0 +1,61 @@
+@media screen and (min-width: 768px) {
+  .Icono {
+    z-index: 1021;
+    position: fixed;
+    right: 10px;
+    top: 50%;
+  }
+}
+
+.Icono {
+  background: white;
+}
+.Contenedor__Carrito {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0,0,79,0.8);
+  z-index: 1022;
+}
+.Contenedor__Carrito.abierto {
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Contenedor__Ventana {
+  position: relative;
+}
+
+.Ventana[data-ocultar="true"] {
+  display: none;
+}
+.Ventana[data-ocultar="false"] {
+  display: flex;
+}
+
+.Ventana {
+  width: 95vw;
+  background: rgba(256,256,256,0.9);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @media screen and (min-width: 768px) {
+    padding: 3rem;
+    width: 60vw;
+  }
+  @media screen and (min-width: 992px) {
+    width: 40vw;
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
