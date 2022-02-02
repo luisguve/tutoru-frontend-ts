@@ -24,8 +24,10 @@ export const useCoursePurchased = (id: number) => {
 }
 
 interface ICourseDetails {
-  classesCompleted: {id: string}[],
   students: number
+}
+interface IClassesCompleted {
+  classesCompleted: {id: number}[]
 }
 
 export const useCourseDetails = (id: number) => {
@@ -67,33 +69,43 @@ export const useCourseDetails = (id: number) => {
   }
 }
 
-export const useClasesCompletadas = (id: number) => {
-  const [clasesCompletadas, setClasesCompletadas] = useState([])
+export const useClassesCompleted = (id: number) => {
+  const [data, setData] = useState<IClassesCompleted | null>(null)
+  const [loadingClassesCompleted, setLoading] = useState(false)
+
   const { user } = useContext(AuthContext)
 
-  // Obtener las clases completadas
   useEffect(() => {
-    const fetchCurso = async (id: number) => {
+    const fetchClassesCompleted = async (id: number) => {
       if (!user) {
         return
       }
+      setLoading(true)
       try {
-        const url = `${STRAPI}/masterclass/usuario-curso/${id}/clases-completadas`
-        const options = {
+        const cursoUrl = `${STRAPI}/api/masterclass/course-details/${id}`
+        const options: RequestInit = {
           headers: {
             "Authorization": `Bearer ${user.token}`
           }
         }
-        const curso_res = await fetch(url, options)
-        const data = await curso_res.json()
-        setClasesCompletadas(data.clasesCompletadas)
+        const data_res = await fetch(cursoUrl, options)
+        const data = await data_res.json()
+        setData(data)
+        if (!data_res.ok) {
+          console.log({data})
+          toast("Could not fetch classes completed")
+        }
       } catch (err) {
         console.log(err)
+        toast("Could not fetch classes completed")
       }
+      setLoading(false)
     }
-    fetchCurso(id)
+    fetchClassesCompleted(id)
   }, [id, user])
+
   return {
-    clasesCompletadas
+    classesCompleted: data ? data.classesCompleted : null,
+    loadingClassesCompleted
   }
 }
