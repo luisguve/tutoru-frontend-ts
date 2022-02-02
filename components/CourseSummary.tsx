@@ -4,7 +4,7 @@ import { ICourseSummary } from "../lib/content"
 import { STRAPI } from "../lib/urls"
 import AddButton from './AddButton'
 import styles from "../styles/ListaCurso.module.scss"
-import { useCoursePurchased } from "../hooks/item"
+import { useCoursePurchased, useCourseDetails } from "../hooks/item"
 
 interface CourseSummaryProps {
   data: ICourseSummary,
@@ -13,6 +13,7 @@ interface CourseSummaryProps {
 const CourseSummary = (props: CourseSummaryProps) => {
   const { data, gotoCourse } = props
   const coursePurchased = useCoursePurchased(data.id)
+  const { courseDetails, loadingDetails } = useCourseDetails(data.id)
   const imgUrl = `${STRAPI}${data.thumbnail[0].url}`
   const courseUrl = `/course/${data.slug}`
   const linkToCourse = (
@@ -33,6 +34,12 @@ const CourseSummary = (props: CourseSummaryProps) => {
       </div>
       <p className="m-0">Duration: {data.duration}s</p>
       <p className="m-0">Lectures: {data.lectures.length}</p>
+      <p className="m-0">
+        Students:{" "}
+        {
+          loadingDetails ? "Loading..." : courseDetails ? courseDetails.students : 0
+        }
+      </p>
       {
         (!coursePurchased && !gotoCourse) && <p className="m-0"><strong>${data.price}</strong></p>
       }
