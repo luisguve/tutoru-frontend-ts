@@ -56,12 +56,12 @@ export async function getCoursesSummary() {
   return summary
 }
 
-export interface IPath {
+interface IPath {
   params: {
     slug: string
   }
 }
-export async function getCoursesSlugs() {
+export async function getCoursesSlugs(): Promise<IPath[]> {
   const url = `${STRAPI}/api/masterclass/courses-slugs`
   const data_res = await fetch(url)
   const data: ISlugsRes = await data_res.json()
@@ -80,7 +80,7 @@ export async function getCoursesSlugs() {
     return pathsList.concat([path1, path2])
   }, [] as IPath[])
 
-  return data
+  return slugsPaths
 }
 
 export async function getCourseData(slug: string) {

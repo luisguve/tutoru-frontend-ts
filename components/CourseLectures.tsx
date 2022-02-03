@@ -7,7 +7,7 @@ import AuthContext from "../context/AuthContext"
 import { Ilecture } from "../lib/content"
 import { STRAPI } from "../lib/urls"
 import AddButton from './AddButton'
-import styles from "../../styles/PaginaCurso.module.scss"
+import styles from "../styles/PaginaCurso.module.scss"
 import { useCoursePurchased, useClassesCompleted } from "../hooks/item"
 
 interface CourseLecturesProps {
@@ -65,8 +65,8 @@ const CourseLectures = (props: CourseLecturesProps) => {
               }
               <span className="me-1 me-sm-2 me-md-5">{idx + 1}.</span>
               <div className="pt-3">
-                <p className="mb-0 small">{lecture.title}</p>
-                <p className="small">{formatDuration(lecture.video.duration)}</p>
+                <p className="mb-0 small" style={{wordBreak: "break-all"}}>{lecture.title}</p>
+                <p className="small">{formatDuration(lecture.video.duration * 1000)}</p>
               </div>
             </li>
           )

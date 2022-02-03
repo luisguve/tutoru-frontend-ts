@@ -61,7 +61,7 @@ export const Desktop = () => {
         className={showClass.concat(" dropdown-menu")}
       >
         <li>
-          <Link href="/cuenta"><a className="dropdown-item">My learning</a></Link>
+          <Link href="/my-learning"><a className="dropdown-item">My learning</a></Link>
         </li>
         <li>
           <button
