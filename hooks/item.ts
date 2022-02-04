@@ -6,7 +6,7 @@ import MyLearningContext from "../context/MyLearningContext"
 import { STRAPI } from "../lib/urls"
 
 export const useCoursePurchased = (id: number) => {
-  const [cursoComprado, setCursoComprado] = useState(false)
+  const [cursoComprado, setCursoComprado] = useState<boolean | null>(null)
   const { coursesIDs } = useContext(MyLearningContext)
 
   useEffect(() => {

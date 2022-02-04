@@ -20,7 +20,7 @@ interface ILayoutProps {
   header: string,
   isHome?: boolean,
   breadCrumb?: Array<BreadcrumbElement>,
-  isRepPage?: boolean
+  isPageRep?: boolean
 }
 
 const Layout = (props: ILayoutProps) => {
@@ -31,11 +31,11 @@ const Layout = (props: ILayoutProps) => {
     title,
     subtitle,
     header,
-    isRepPage
+    isPageRep
   } = props
   const router = useRouter()
   let containerClassname = styles.container
-  if (isRepPage) {
+  if (isPageRep) {
     containerClassname += ` ${styles["container-rep"]}`
   } else {
     containerClassname += " px-2"

@@ -58,7 +58,7 @@ export async function getCoursesSummary() {
 
 interface IPath {
   params: {
-    slug: string
+    slug: string[]
   }
 }
 export async function getCoursesSlugs(): Promise<IPath[]> {
@@ -69,12 +69,12 @@ export async function getCoursesSlugs(): Promise<IPath[]> {
   const slugsPaths = data.courses.reduce((pathsList, {slug}) => {
     const path1 = {
       params: {
-        slug
+        slug: [slug]
       }
     }
     const path2 = {
       params: {
-        slug: slug.concat("/view")
+        slug: [slug, "view"]
       }
     }
     return pathsList.concat([path1, path2])

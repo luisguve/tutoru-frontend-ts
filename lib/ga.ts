@@ -16,5 +16,6 @@ export const event = ({ action, params }: {action: string, params: any}) => {
 declare global {
   interface Window {
     gtag: any;
+    AliPlayerComponent: any;
   }
 }

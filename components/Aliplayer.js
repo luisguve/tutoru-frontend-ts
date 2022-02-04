@@ -40,7 +40,7 @@ var Aliplayer = function (_a) {
     }, [id, config]);
     useEffect(function() {
         if (window) {
-            require("./deps/aliplayercomponents-1.0.5.min.js")
+            require("./deps/aliplayercomponent-1.0.5.min.js")
         }
     }, [])
     return React.createElement("div", { id: id });
