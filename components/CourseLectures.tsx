@@ -116,7 +116,7 @@ export const CourseLecturesRep = (props: CourseLecturesRepProps) => {
             if (!user) {
               return
             }
-            const url = `${STRAPI}/masterclass/usuario-curso/marcar-visto?curso-id=${courseID}&video-id=${lecture.id}`
+            const url = `${STRAPI}/api/masterclass/courses/${courseID}/check-lecture?lecture=${lecture.id}`
             const options = {
               method: "PUT",
               headers: {

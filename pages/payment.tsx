@@ -7,7 +7,7 @@ import { useContext } from "react"
 import AuthContext from "../context/AuthContext"
 import Layout from '../components/Layout'
 import { useOrder } from "../hooks/order"
-// http://localhost:3000/payment?checkout_session=cs_test_a1KfzlP2iUPLojqlPnaX2UruxnGNiGV4h17H3ymOlok035umi0z6u12MAi
+
 const breadCrumb = [
   {
     name: "home",
@@ -31,7 +31,6 @@ const Payment = () => {
       subtitle="def"
       breadCrumb={breadCrumb}
       header="Tutor Universitario"
-      isHome
     >
       <div>
         <Head>

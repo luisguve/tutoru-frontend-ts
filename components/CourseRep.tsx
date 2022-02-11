@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useRef } from "react"
 import { useRouter } from "next/router"
 import Head from "next/head"
 import { toast } from "react-toastify"
+import Hls from 'hls.js';
 
 import { Ilecture } from "../lib/content"
 
@@ -9,7 +10,6 @@ import MyLearningContext from "../context/MyLearningContext"
 import AuthContext from "../context/AuthContext"
 import { useCoursePurchased } from "../hooks/item"
 import { STRAPI } from "../lib/urls"
-import Aliplayer from "../components/Aliplayer"
 import { CourseLecturesRep } from "./CourseLectures"
 
 interface CourseRepProps {
@@ -82,15 +82,12 @@ const CourseRep = (props: CourseRepProps) => {
   }, [loadingItems, coursePurchased, user])
   return (
     <div>
-     <Head>
-       <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.9.16/skins/default/aliplayer-min.css" />
-     </Head>
       {
         <div className="row mx-0 justify-content-end">
           <div className="col-12">
             <h1 className="fs-2">{courseTitle}</h1>
           </div>
-          <div className="col-lg-8 px-0 px-md-2" style={{minHeight: 500}}>
+          <div className="col-lg-8 px-0 px-md-2" style={{minHeight: 340}}>
             {
               (loading || loadingItems) ?
                 <div className="bg-dark d-flex flex-column align-items-center justify-content-center h-100">
@@ -108,7 +105,6 @@ const CourseRep = (props: CourseRepProps) => {
                 <>
                   <Reproductor
                     PlayAuth={dataRep.PlayAuth}
-                    VideoId={dataRep.VideoId}
                   />
                   <VideoMetadata
                     lectures={lectures}
@@ -134,55 +130,45 @@ const CourseRep = (props: CourseRepProps) => {
 
 interface ReproductorProps {
   PlayAuth: string,
-  VideoId: string
+  VideoId?: string
 }
 
 const Reproductor = (props: ReproductorProps) => {
-  const { PlayAuth, VideoId } = props
-  const [instance, setInstance] = useState<any | null>(null)
-
-  const config = {
-    id: "player-con",
-    vid: VideoId,
-    playauth: PlayAuth,
-    qualitySort: "asc",
-    format: "mp4",
-    mediaType: "video",
-    width: "100%",
-    height: "500px",
-    autoplay: true,
-    isLive: false,
-    rePlay: false,
-    playsinline: true,
-    preload: true,
-    controlBarVisibility: "hover",
-    useH5Prism: true,
-    language: "en-us"
-  }
-  useEffect(() => {
-    if (window) {
-      (Aliplayer as any).components = window.AliPlayerComponent;
-    }
-  }, [])
-
-  if (!PlayAuth || !VideoId) {
-    return null
-  }
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const src = props.PlayAuth;
 
   useEffect(() => {
-    if (!instance) {
-      return
+    let hls: Hls;
+    if (videoRef.current) {
+      const video = videoRef.current;
+
+      if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        // Some browers (safari and ie edge) support HLS natively
+        video.src = src;
+      } else if (Hls.isSupported()) {
+        // This will run in all other modern browsers
+        hls = new Hls();
+        hls.loadSource(src);
+        hls.attachMedia(video);
+      } else {
+        console.error("This is a legacy browser that doesn't support MSE");
+      }
     }
-    instance.replayByVidAndPlayAuth(VideoId, PlayAuth)
-  }, [PlayAuth])
+
+    return () => {
+      if (hls) {
+        hls.destroy();
+      }
+    };
+  }, [videoRef]);
 
   return (
-    <Aliplayer
-      sourceUrl="https://g.alicdn.com/de/prismplayer/2.9.16/aliplayer-min.js"
-      onGetInstance={(instance: any) => setInstance(instance)}
-      config={config}
-    ></Aliplayer>
-  )
+    <video
+      controls
+      ref={videoRef}
+      style={{ width: "100%" }}
+    />
+  );
 }
 
 interface VideoMetadataProps {

@@ -32,12 +32,12 @@ const AddButton = ({ item }: AddButtonProps) => {
   return (
     added ?
       <button
-        className="btn btn-sm btn-success"
+        className="btn btn-sm btn-success py-2"
         onClick={removeFromCart}
       >Remove from the cart</button>
       :
       <button
-        className="btn btn-sm btn-success"
+        className="btn btn-sm btn-success py-2"
         onClick={addToCart}
       >Add to cart</button>
   )

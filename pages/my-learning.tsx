@@ -81,7 +81,7 @@ const MyLearning = () => {
         {
           loadingOrders ?
           <h4 className="text-center">
-            Cargando tus ordenes de compra...
+            Loading your order history...
           </h4>
           :
           (!orders || !orders.length) ?
