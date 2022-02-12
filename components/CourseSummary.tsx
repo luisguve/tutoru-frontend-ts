@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { ReviewStats } from "strapi-ratings-client"
+import { CommentStats } from "strapi-comments-client"
 
 import { ICourseSummary } from "../lib/content"
 import { STRAPI } from "../lib/urls"
@@ -48,6 +50,8 @@ const CourseSummary = (props: CourseSummaryProps) => {
           loadingDetails ? "Loading..." : courseDetails ? courseDetails.students : 0
         }
       </p>
+      <ReviewStats slug={data.slug} apiURL={STRAPI} />
+      <CommentStats slug={data.slug} apiURL={STRAPI} />
       {
         (!coursePurchased && !gotoCourse) && <p className="m-0"><strong>${data.price}</strong></p>
       }
