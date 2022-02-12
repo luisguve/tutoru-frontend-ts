@@ -1,7 +1,9 @@
-import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs'
+import dynamic from 'next/dynamic'
+const Tabs = dynamic(import('react-tabs').then(mod => mod.Tabs), { ssr: false }) // disable ssr
+
+import { Tab, TabList, TabPanel } from 'react-tabs'
+import 'react-tabs/style/react-tabs.css';
 import { useState, useContext, useEffect } from "react"
-import { ThemeProvider } from "@strapi/design-system/ThemeProvider"
-import { lightTheme } from "@strapi/design-system/themes"
 import {
   CommentsProvider,
   Comments,
@@ -64,28 +66,24 @@ const CourseDesc = (props: CourseDescProps) => {
   return (
     <>
       <CourseSummary onPage={true} data={data} />
-      <ThemeProvider theme={lightTheme}>
-        <TabGroup label="Course stats" id="tabs">
-          <Tabs>
-            <Tab>Reviews</Tab>
-            <Tab>Comments</Tab>
-            <Tab>Playlist</Tab>
-          </Tabs>
-          <TabPanels>
-            <TabPanel>
-              <ReviewForm />
-              <Reviews />
-            </TabPanel>
-            <TabPanel>
-              <CommentForm />
-              <Comments />
-            </TabPanel>
-            <TabPanel>
-              <CourseLectures data={data.lectures} courseID={data.id} />
-            </TabPanel>
-          </TabPanels>
-        </TabGroup>
-      </ThemeProvider>
+      <Tabs label="Course stats" id="tabs">
+        <TabList>
+          <Tab>Reviews</Tab>
+          <Tab>Comments</Tab>
+          <Tab>Playlist</Tab>
+        </TabList>
+        <TabPanel>
+          <ReviewForm />
+          <Reviews />
+        </TabPanel>
+        <TabPanel>
+          <CommentForm />
+          <Comments />
+        </TabPanel>
+        <TabPanel>
+          <CourseLectures data={data.lectures} courseID={data.id} />
+        </TabPanel>
+      </Tabs>
     </>
   )
 }
