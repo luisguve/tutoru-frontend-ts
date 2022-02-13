@@ -99,7 +99,7 @@ const CourseRep = (props: CourseRepProps) => {
                   <button
                     className="btn btn-primary"
                     onClick={() => fetchDataRep(errData.lectureID)}
-                  >Load again</button>
+                  >Try again</button>
                 </div>
               : dataRep &&
                 <>
