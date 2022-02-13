@@ -20,6 +20,7 @@ export interface ICourseSummary {
   title: string,
   duration: number,
   description: string,
+  long_description: string,
   price: number,
   slug: string,
   createdAt: string,

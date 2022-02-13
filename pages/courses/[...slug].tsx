@@ -1,5 +1,8 @@
 import dynamic from 'next/dynamic'
-const Tabs = dynamic(import('react-tabs').then(mod => mod.Tabs), { ssr: false }) // disable ssr
+
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkHtml from 'remark-html'
 
 import { Tab, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css';
@@ -17,6 +20,8 @@ import {
   ReviewsConfigContext,
   ReviewStats
 } from "strapi-ratings-client"
+
+const Tabs = dynamic(import('react-tabs').then(mod => mod.Tabs), { ssr: false }) // disable ssr
 
 import Layout from '../../components/Layout'
 import CourseSummary from "../../components/CourseSummary"
@@ -50,6 +55,17 @@ const CourseDescWrapper = (props: CourseDescWrapperProps) => {
   )
 }
 
+interface MarkdownProps {
+  data: string;
+}
+
+const Markdown = (props: MarkdownProps) => {
+  const { data } = props
+  return (
+    <div dangerouslySetInnerHTML={{ __html: data}}></div>
+  )
+}
+
 const CourseDesc = (props: CourseDescProps) => {
   const { data } = props
   const { user } = useContext(AuthContext)
@@ -66,6 +82,7 @@ const CourseDesc = (props: CourseDescProps) => {
   return (
     <>
       <CourseSummary onPage={true} data={data} />
+      <Markdown data={data.long_description} />
       <Tabs>
         <TabList>
           <Tab>Reviews</Tab>
@@ -140,6 +157,12 @@ export async function getStaticProps(props: PropsGetStaticProps): Promise<{props
   const { params: { slug } } = props
   const isPageRep = slug.includes("view")
   const data = await getCourseData(slug[0])
+
+  data.long_description = String(await unified()
+    .use(remarkParse)
+    .use(remarkHtml)
+    .process(data.long_description || ""))
+
   return {
     props: {
       data,

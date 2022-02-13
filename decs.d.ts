@@ -5,3 +5,4 @@ declare module "@strapi/design-system/TabPanels";
 declare module "@strapi/design-system/TabPanel";
 declare module "@strapi/design-system/ThemeProvider";
 declare module "@strapi/design-system/themes";
+declare module "react-tabs";
