@@ -66,7 +66,7 @@ const CourseDesc = (props: CourseDescProps) => {
   return (
     <>
       <CourseSummary onPage={true} data={data} />
-      <Tabs label="Course stats" id="tabs">
+      <Tabs>
         <TabList>
           <Tab>Reviews</Tab>
           <Tab>Comments</Tab>
