@@ -142,7 +142,7 @@ export const CourseLecturesRep = (props: CourseLecturesRepProps) => {
                 type="checkbox"
                 className={"me-1 ".concat(styles.checkbox)}
                 onClick={marcarVisto}
-                defaultChecked={completed ? true : false}
+                defaultChecked={completed || undefined}
               />
               <span className="me-1 me-sm-2">{idx + 1}.</span>
               <div className="pt-3">
