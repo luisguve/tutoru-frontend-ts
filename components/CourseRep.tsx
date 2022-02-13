@@ -181,7 +181,7 @@ const VideoMetadata = (props: VideoMetadataProps) => {
   let title = "0 - Sin titulo"
   for (var i = lectures.length - 1; i >= 0; i--) {
     if (lectures[i].id === current) {
-      title = lectures[i].title
+      title = `${i+1} - ` + lectures[i].title
       break
     }
   }
