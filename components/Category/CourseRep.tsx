@@ -1,21 +1,22 @@
 import { useState, useEffect, useContext, useRef } from "react"
 import { useRouter } from "next/router"
 import Head from "next/head"
-import { toast } from "react-toastify"
 import Hls from 'hls.js';
 
-import { Ilecture } from "../lib/content"
+import { Ilecture } from "../../lib/content"
 
-import MyLearningContext from "../context/MyLearningContext"
-import AuthContext from "../context/AuthContext"
-import { useCoursePurchased } from "../hooks/item"
-import { STRAPI } from "../lib/urls"
-import { CourseLecturesRep } from "./CourseLectures"
+import MyLearningContext from "../../context/MyLearningContext"
+import AuthContext from "../../context/AuthContext"
+import { useCoursePurchased } from "../../hooks/item"
+import { STRAPI } from "../../lib/urls"
+import { Playlist } from "./LecturesList"
 
 interface CourseRepProps {
-  courseID: number,
-  courseTitle: string,
-  lectures: Ilecture[]
+  data: {
+    id: number;
+    title: string,
+    lectures: Ilecture[];
+  }
 }
 
 interface IErrData {
@@ -29,8 +30,8 @@ interface IDataRep {
   classesCompleted: Ilecture[]
 }
 
-const CourseRep = (props: CourseRepProps) => {
-  const { courseID, courseTitle, lectures } = props
+const CourseRep = ({data}: CourseRepProps) => {
+  const { id: courseID, title: courseTitle, lectures } = data
   const [loading, setLoading] = useState(false)
   const [dataRep, setDataRep] = useState<IDataRep | null>(null)
   const [errData, setErrData] = useState<IErrData | null>(null)
@@ -114,7 +115,7 @@ const CourseRep = (props: CourseRepProps) => {
             }
           </div>
           <div className="col-lg-4">
-            <CourseLecturesRep
+            <Playlist
               lectures={lectures}
               changeLecture={fetchDataRep}
               currentLectureID={dataRep ? dataRep.currentLectureID : null}
@@ -127,6 +128,8 @@ const CourseRep = (props: CourseRepProps) => {
     </div>
   )
 }
+
+export default CourseRep
 
 interface ReproductorProps {
   PlayAuth: string,
@@ -189,5 +192,3 @@ const VideoMetadata = (props: VideoMetadataProps) => {
     <h4 className="mt-3">{title}</h4>
   )
 }
-
-export default CourseRep

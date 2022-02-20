@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import Layout from '../components/Layout'
 import { getCoursesSummary, ICourseSummary } from "../lib/content"
-import CourseSummary from "../components/CourseSummary"
+import CourseSummary from "../components/Category/CourseSummary"
 
 export async function getStaticProps() {
   const { courses } = await getCoursesSummary()

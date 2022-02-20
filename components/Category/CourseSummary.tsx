@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { ReviewStats } from "strapi-ratings-client"
 import { CommentStats } from "strapi-comments-client"
-
-import { ICourseSummary } from "../lib/content"
-import { STRAPI } from "../lib/urls"
-import AddButton from './AddButton'
-import styles from "../styles/ListaCurso.module.scss"
-import { useCoursePurchased, useCourseDetails } from "../hooks/item"
 import formatDuration from "format-duration"
+
+import { ICourseSummary } from "../../lib/content"
+import { STRAPI } from "../../lib/urls"
+import AddButton from '../AddButton'
+import styles from "../../styles/ListaCurso.module.scss"
+import { useCoursePurchased, useCourseDetails } from "../../hooks/item"
 
 interface CourseSummaryProps {
   data: ICourseSummary,
@@ -16,13 +16,19 @@ interface CourseSummaryProps {
 }
 const CourseSummary = (props: CourseSummaryProps) => {
   const { data, gotoCourse, onPage } = props
+  const { category } = data
   const coursePurchased = useCoursePurchased(data.id)
   const { courseDetails, loadingDetails } = useCourseDetails(data.id)
   const imgUrl = `${STRAPI}${data.thumbnail[0].url}`
-  const courseUrl = `/courses/${data.slug}`
+  const courseUrl = `/${category.slug}/course/${data.slug}`
   const linkToCourse = (
     <Link href={courseUrl.concat("/view")}>
       <a className="btn btn-sm btn-success py-2 d-flex align-items-center justify-content-center">Go to course</a>
+    </Link>
+  )
+  const linkToCategory = (
+    <Link href={`/${category.slug}`}>
+      <a className="btn btn-sm btn-primary my-1">{category.title}</a>
     </Link>
   )
   return (
@@ -38,6 +44,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
           )
         }
       </h3>
+      {linkToCategory}
       <p className="m-0">{data.description}</p>
       <div className="d-flex align-items-center">
         <img className="img-flud mw-100" src={imgUrl} alt={data.thumbnail[0].name} />

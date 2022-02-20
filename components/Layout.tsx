@@ -8,7 +8,7 @@ import styles from '../styles/Layout.module.css'
 import Footer from "./Footer"
 import Header from "./Header"
 
-interface BreadcrumbElement {
+export interface BreadcrumbElement {
   url: string,
   name: string
 }

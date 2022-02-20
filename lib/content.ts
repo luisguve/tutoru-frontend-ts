@@ -1,45 +1,75 @@
 import { STRAPI } from "./urls"
+import { ICategory, ICourse } from "./categories"
+import { BreadcrumbElement } from "../components/Layout"
 
 /*
 * Lecture data structure
 */
 export interface Ilecture {
-  id: number,
-  title: string,
+  id: number;
+  title: string;
   video: {
     duration: number
   }
 }
 export interface IThumbnail {
-  id: number,
-  name: string,
-  url: string
+  id: number;
+  name: string;
+  url: string;
 }
 export interface ICourseSummary {
-  id: number,
-  title: string,
-  duration: number,
-  description: string,
-  long_description: string,
-  price: number,
-  slug: string,
-  createdAt: string,
-  updatedAt: string,
-  thumbnail: IThumbnail[],
-  lectures: Ilecture[]
+  id: number;
+  title: string;
+  duration: number;
+  description: string;
+  long_description: string;
+  price: number;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  thumbnail: IThumbnail[];
+  lectures: Ilecture[];
+  category: {
+    slug: string;
+    title: string;
+  };
+  kind: "course";
 }
 export interface ICoursesRes {
-  courses: ICourseSummary[]
+  courses: ICourseSummary[];
 }
 export interface ISlugsRes {
-  courses: {slug: string}[]
+  courses: {slug: string;}[];
+}
+
+export interface ICategorySummary {
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  thumbnail: IThumbnail[];
+  courses: ICourseSummary[];
+  kind: "category";
+}
+
+/**
+* Fetches the category's data.
+*/
+export async function getCategorySummary(slug: string): Promise<ICategorySummary> {
+  const url = `${STRAPI}/api/masterclass/categories/${slug}`
+  const summary_res = await fetch(url)
+  const summary: ICategorySummary = await summary_res.json()
+
+  return summary
 }
 
 /**
 * Fetches the course's data.
 */
 export async function getCourseSummary(slug: string) {
-  const url = `${STRAPI}/api/masterclass/course/${slug}`
+  const url = `${STRAPI}/api/masterclass/courses/${slug}`
   const summary_res = await fetch(url)
   const summary: ICourseSummary = await summary_res.json()
 
@@ -90,4 +120,220 @@ export async function getCourseData(slug: string) {
   const summary: ICourseSummary = await summary_res.json()
 
   return summary
+}
+
+interface ITree {
+  parentUrl: string[];
+  root: ICategory;
+}
+interface ITreeItem {
+  params: {
+    page: string[];
+  };
+}
+export function buildIndex({parentUrl, root}: ITree) {
+  const result: ITreeItem[] = []
+  const page = [...parentUrl, root.slug]
+  const urlPage = {
+    params: { page }
+  }
+  result.push(urlPage)
+  root.courses.map(c => {
+    const coursePage = {
+      params: {
+        page: [...page, "course", c.slug]
+      }
+    }
+    const courseRepPage = {
+      params: {
+        page: [...page, "course", c.slug, "view"]
+      }
+    }
+    result.push(coursePage)
+  })
+  root.subcategories.map(subcategory => {
+    const subIndex =  buildIndex({
+      parentUrl: page,
+      root: subcategory
+    })
+    result.push(...subIndex)
+  })
+  return result
+}
+
+interface ResultCurrentCategory {
+  currentCategory: ICategory;
+  isCategory: boolean;
+}
+
+/**
+* Retorna el indice de la categoria indicado por path.
+* Retorna null si no se encuentra el indice que corresponde a path o
+* en su defecto, si la ruta es de la pagina de un curso.
+*/
+export const indexCurrentCategory = (index: ICategory, path: string[]): ResultCurrentCategory => {
+  const page = path[path.length - 1]
+
+  if (index.slug === page) {
+    // Estamos en la raiz de la seccion
+    return {
+      currentCategory: index,
+      isCategory: true
+    }
+  }
+
+  // No estamos en la raiz de la seccion
+
+  // Navega recursivamente por el indice siguiendo la ruta de la pagina
+  let currentCategory = index
+  const eachHijo = (coll: ICategory[]): ResultCurrentCategory => {
+    for (let i = 0; i < coll.length; i++) {
+      const category = coll[i]
+
+      if (path.includes(category.slug)) {
+        currentCategory = category
+        // Ruta correcta
+        if (category.slug === page) {
+          // Indice de categoria encontrado
+          return {
+            currentCategory: category,
+            isCategory: true,
+          }
+        }
+        // Seguir buscando en las subcategorias
+        return eachHijo(category.subcategories)
+      }
+    }
+    // Indice no encontrado
+    return {
+      currentCategory,
+      isCategory: false
+    }
+  }
+  return eachHijo(index.subcategories)
+}
+
+interface IBreadcrumbComponent {
+  name: string;
+  url: string;
+}
+
+interface IBuildBreadcrumb {
+  breadcrumb: BreadcrumbElement[];
+  metaSubtitulo: string;
+  tituloCabecera: string;
+}
+
+/**
+* Construye el breadcrumb de acuerdo a la ruta y el indice recibido.
+*/
+export const buildBreadcrumb = (index: ICategory, path: string[]): IBuildBreadcrumb => {
+  const home = {
+    name: "home",
+    url: "/",
+  }
+  const root = {
+    name: index.title,
+    url: "/" + index.slug
+  }
+  const breadcrumb = [home, root]
+
+  let metaSubtitulo = index.title
+  let tituloCabecera = index.title
+
+  const page = path[path.length - 1]
+
+  if (index.slug === page) {
+    // Estamos en la raiz de la categoria
+    return {
+      breadcrumb,
+      metaSubtitulo,
+      tituloCabecera,
+    }
+  }
+
+  // No estamos en la raiz de la seccion
+  const pages: IBreadcrumbComponent[] = []
+
+  // Navega recursivamente por el index siguiendo la ruta de la pagina
+  let currentCategory = index
+  const eachHijo = (coll: ICategory[]) => {
+    let found = false
+    for (let i = 0; i < coll.length; i++) {
+      const category = coll[i]
+
+      if (path.includes(category.slug)) {
+        // Ruta correcta
+        currentCategory = category
+        metaSubtitulo += ` - ${category.title}`
+        tituloCabecera = category.title
+
+        let base
+        if (!pages.length) {
+          base =  `/${index.slug}`
+        } else {
+          base = pages[pages.length - 1].url
+        }
+        const newUrl = `${base}/${category.slug}`
+
+        pages.push({
+          name: category.title,
+          url: newUrl,
+        })
+
+        // Navegar por las subcategorias hasta dar con la ultima pagina
+        eachHijo(category.subcategories)
+        // No seguir en este nivel
+        found = true
+        break
+      }
+    }
+
+    if (!found) {
+      // En este punto la pagina no fue encontrada en este nivel del index, lo cual
+      // puede significar que estamos en la pagina de un curso.
+      if (path.includes("course")) {
+        let courseSlug = ""
+        if (path.includes("view")) {
+          courseSlug = path[path.length - 2]
+        } else {
+          courseSlug = page
+        }
+        const course = currentCategory.courses.find(c => c.slug === courseSlug)
+        if (!course) {
+          return
+        }
+        let base
+        if (!pages.length) {
+          base =  `/${index.slug}`
+        } else {
+          base = pages[pages.length - 1].url
+        }
+        let newUrl = `${base}/course/${page}`
+        let lastBreadcrumbElement: BreadcrumbElement = {
+          name: course.title,
+          url: newUrl
+        }
+        if (path.includes("view")) {
+          newUrl = `${base}/course/${path[path.length - 2]}`
+          lastBreadcrumbElement.url = newUrl
+          pages.push(lastBreadcrumbElement)
+          lastBreadcrumbElement = {
+            name: "View",
+            url: `${newUrl}/view`
+          }
+        }
+        pages.push(lastBreadcrumbElement)
+      }
+    }
+  }
+  eachHijo(index.subcategories)
+
+  breadcrumb.push(...pages)
+
+  return {
+    breadcrumb,
+    metaSubtitulo,
+    tituloCabecera
+  }
 }
