@@ -17,7 +17,7 @@ import {
 import { BreadcrumbElement } from "../components/Layout"
 import { ICategory } from "./categories"
 
-// import { cargarNavItems, cargarInformacionSitio } from "./metadata"
+import { loadNavigation, INavigationItem } from "./metadata"
 
 interface getCategoryDataProps {
   params: {
@@ -35,6 +35,7 @@ export interface ICategoryData {
   isCourseRep: boolean;
   isCourse: boolean;
   breadcrumb: BreadcrumbElement[];
+  navigation: INavigationItem[];
 }
 export const getCategoryData =
 async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> => {
@@ -44,7 +45,7 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
     return null
   }
 
-  // const navItems = await cargarNavItems()
+  const navigation = await loadNavigation()
   // const informacionSitio = await cargarInformacionSitio()
 
   // Indice para construir el breadcrumb y el contenido de cada seccion
@@ -100,7 +101,8 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
     isCategory,
     isCourseRep,
     isCourse,
-    breadcrumb
+    breadcrumb,
+    navigation
   }
 }
 

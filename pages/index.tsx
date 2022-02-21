@@ -2,19 +2,23 @@ import Head from 'next/head'
 
 import Layout from '../components/Layout'
 import { getCoursesSummary, ICourseSummary } from "../lib/content"
+import { loadNavigation, INavigationItem } from "../lib/metadata"
 import CourseSummary from "../components/Category/CourseSummary"
 
 export async function getStaticProps() {
   const { courses } = await getCoursesSummary()
+  const navigation = await loadNavigation()
   return {
     props: {
-      courses
-    },
+      courses,
+      navigation
+    }
   }
 }
 
 interface HomeProps {
-  courses: ICourseSummary[]
+  courses: ICourseSummary[];
+  navigation: INavigationItem[];
 }
 export default function Home(props: HomeProps) {
   const courses = props.courses.map(c => <CourseSummary data={c} key={c.slug} />)
@@ -23,6 +27,7 @@ export default function Home(props: HomeProps) {
       title="abc"
       subtitle="def"
       header="Tutor Universitario"
+      navigation={props.navigation}
       isHome
     >
       <section className="p-1">

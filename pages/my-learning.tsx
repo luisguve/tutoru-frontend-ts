@@ -6,7 +6,8 @@ import { STRAPI } from "../lib/urls"
 import AuthContext from "../context/AuthContext"
 import Layout from "../components/Layout"
 import { usePurchaseHistory } from "../hooks/history"
-import CourseSummary from "../components/CourseSummary"
+import CourseSummary from "../components/Category/CourseSummary"
+import { loadNavigation, INavigationItem } from "../lib/metadata"
 
 const breadCrumb = [
   {
@@ -19,8 +20,26 @@ const breadCrumb = [
   }
 ]
 
-const MyLearning = () => {
+interface StaticProps {
+  props: {
+    navigation: INavigationItem[];
+  }
+}
+export const getStaticProps = async (): Promise<StaticProps> => {
+  const navigation = await loadNavigation()
+  return {
+    props: {
+      navigation
+    }
+  }
+}
+
+interface MyLearningProps {
+  navigation: INavigationItem[];
+}
+const MyLearning = (props: MyLearningProps) => {
   const { user, logoutUser } = useContext(AuthContext)
+  const { navigation } = props
 
   const {
     orders, loadingOrders,
@@ -33,6 +52,7 @@ const MyLearning = () => {
         title="Tutor Universitatio"
         subtitle="def"
         header="My learning"
+        navigation={navigation}
         breadCrumb={breadCrumb}
       >
       <Head><title>Tutor Universitatio | My learning</title></Head>
@@ -45,6 +65,7 @@ const MyLearning = () => {
       title="Tutor Universitatio"
       subtitle="def"
       header="My learning"
+      navigation={navigation}
       breadCrumb={breadCrumb}
     >
       <Head><title>Tutor Universitatio | Mi cuenta</title></Head>

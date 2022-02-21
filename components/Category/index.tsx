@@ -9,7 +9,7 @@ interface CategoryPageProps {
   props: ICategoryData
 }
 const CategoryPage = ({props}: CategoryPageProps) => {
-  const { data: {summary}, isCourseRep, breadcrumb } = props
+  const { data: {summary}, isCourseRep, breadcrumb, navigation } = props
   let component: React.ReactNode = <p>Unknown type of content</p>
   let header = "Tutor Universitario"
   switch (summary.kind) {
@@ -35,6 +35,7 @@ const CategoryPage = ({props}: CategoryPageProps) => {
       header={header}
       isPageRep={isCourseRep}
       breadCrumb={breadcrumb}
+      navigation={navigation}
     >
     {component}
     </Layout>

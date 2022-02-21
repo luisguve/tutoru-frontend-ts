@@ -5,15 +5,17 @@ import styles from "../../styles/Header.module.scss"
 
 import Menu from "./Menu"
 
-interface IHeaderProps {
-  isHome: boolean,
-  title: string,
-  subtitle: string,
-  header: string
-}
+import { INavigationItem } from "../../lib/metadata"
 
+interface IHeaderProps {
+  isHome: boolean;
+  title: string;
+  subtitle: string;
+  header: string;
+  navigation: INavigationItem[];
+}
 const Header = (props: IHeaderProps) => {
-  const { isHome, title, subtitle, header } = props
+  const { isHome, title, subtitle, header, navigation } = props
   return (
     <>
       <header className={styles.Header}>
@@ -23,7 +25,7 @@ const Header = (props: IHeaderProps) => {
           <HeaderPage title={header} />
         )}
       </header>
-      <Navbar title={title} />
+      <Navbar title={title} navigation={navigation} />
     </>
   )
 }
@@ -70,16 +72,24 @@ const Content = ({title, subtitle}: IContentProps) => {
   )
 }
 
-const Navbar = ({ title }: {title: string}) => {
-/*
+interface NavbarProps {
+  title: string;
+  navigation: INavigationItem[];
+}
+
+const Navbar = (props: NavbarProps) => {
+  const { title, navigation } = props
+
   useEffect(() => {
     // close all inner dropdowns when parent is closed
-    if (window.innerWidth < 992) {
+    if (window && window.innerWidth < 992) {
+
+      const this1: any = this;
 
       document.querySelectorAll('.navbar .dropdown').forEach(function(everydropdown){
         everydropdown.addEventListener('hidden.bs.dropdown', function () {
           // after dropdown is hidden, then find all submenus
-          this.querySelectorAll('.submenu').forEach(function(everysubmenu){
+          document.querySelectorAll('.submenu').forEach(function(everysubmenu){
             // hide every submenu as well
             everysubmenu.classList.add("oculto")
           })
@@ -87,7 +97,7 @@ const Navbar = ({ title }: {title: string}) => {
       })
     }
   }, [])
-*/
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
       <div className="container-fluid">
@@ -96,7 +106,7 @@ const Navbar = ({ title }: {title: string}) => {
         <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="main_nav">
-          <Menu />
+          <Menu navigation={navigation} />
         </div>
       </div>
     </nav>

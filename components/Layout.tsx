@@ -8,26 +8,29 @@ import styles from '../styles/Layout.module.css'
 import Footer from "./Footer"
 import Header from "./Header"
 
+import { INavigationItem } from "../lib/metadata"
+
 export interface BreadcrumbElement {
-  url: string,
-  name: string
+  url: string;
+  name: string;
 }
 
-interface ILayoutProps {
-  children: React.ReactNode,
-  title: string,
-  subtitle: string,
-  header: string,
-  isHome?: boolean,
-  breadCrumb?: Array<BreadcrumbElement>,
-  isPageRep?: boolean
+interface LayoutProps {
+  children: React.ReactNode;
+  title: string;
+  subtitle: string;
+  header: string;
+  navigation: INavigationItem[];
+  isHome?: boolean;
+  breadCrumb?: Array<BreadcrumbElement>;
+  isPageRep?: boolean;
 }
-
-const Layout = (props: ILayoutProps) => {
+const Layout = (props: LayoutProps) => {
   const {
     children,
     isHome,
     breadCrumb,
+    navigation,
     title,
     subtitle,
     header,
@@ -63,6 +66,7 @@ const Layout = (props: ILayoutProps) => {
         <Header
           isHome={isHome === true}
           title={title}
+          navigation={navigation}
           header={header}
           subtitle={subtitle}
         />
@@ -81,12 +85,11 @@ const Layout = (props: ILayoutProps) => {
 
 export default Layout
 
-interface IBreadcrumbProps {
-  elements?: Array<BreadcrumbElement>,
-  isHome?: boolean
+interface BreadcrumbProps {
+  elements?: Array<BreadcrumbElement>;
+  isHome?: boolean;
 }
-
-const Breadcrumb = ({elements, isHome}: IBreadcrumbProps) => {
+const Breadcrumb = ({elements, isHome}: BreadcrumbProps) => {
   const containerClass = "mt-3 mt-md-5 px-2 px-md-0 ms-1 ms-md-0 small"
   if (elements) {
     const links = elements.map((e, i) => {
