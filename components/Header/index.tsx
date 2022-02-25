@@ -63,7 +63,7 @@ interface IContentProps {
 const Content = ({title, subtitle}: IContentProps) => {
   return (
     <div className={styles.Contenido}>
-      <h1>{title}</h1>
+      <h1 className="fs-5 my-1">{title}</h1>
       {
         subtitle &&
         <em>{subtitle}</em>
