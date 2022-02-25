@@ -38,6 +38,9 @@ export interface ICourseSummary {
 export interface ICoursesRes {
   courses: ICourseSummary[];
 }
+export interface ICategoriesRes {
+  categories: ICategorySummary[];
+}
 export interface ISlugsRes {
   courses: {slug: string;}[];
 }
@@ -51,16 +54,33 @@ export interface ICategorySummary {
   updatedAt: string;
   thumbnail: IThumbnail[];
   courses: ICourseSummary[];
+  featured_courses: ICourseSummary[];
+  courses_count: number;
+  subcategories: ICategorySummary[];
   kind: "category";
 }
 
+interface ICategorySummaryRes {
+  category: ICategorySummary;
+}
 /**
 * Fetches the category's data.
 */
 export async function getCategorySummary(slug: string): Promise<ICategorySummary> {
   const url = `${STRAPI}/api/masterclass/categories/${slug}`
   const summary_res = await fetch(url)
-  const summary: ICategorySummary = await summary_res.json()
+  const summary: ICategorySummaryRes = await summary_res.json()
+
+  return summary.category
+}
+
+/**
+* Fetches the data for all the categories.
+*/
+export async function getCategoriesSummary(): Promise<ICategoriesRes> {
+  const url = `${STRAPI}/api/masterclass/categories/index`
+  const summary_res = await fetch(url)
+  const summary: ICategoriesRes = await summary_res.json()
 
   return summary
 }
