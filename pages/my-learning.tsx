@@ -95,7 +95,7 @@ const MyLearning = (props: MyLearningProps) => {
             <div className="my-5">
               <h2 className="text-center mb-3">Your learning</h2>
               {
-                courses.map(({course:c}) => <CourseSummary data={c} key={c.slug} gotoCourse={true} />)
+                courses.map(({course:c}) => <CourseSummary data={c} key={c.slug} gotoCourse displayImage />)
               }
             </div>
         }

@@ -10,12 +10,13 @@ import styles from "../../styles/ListaCurso.module.scss"
 import { useCoursePurchased, useCourseDetails } from "../../hooks/item"
 
 interface CourseSummaryProps {
-  data: ICourseSummary,
-  gotoCourse?: boolean,
-  onPage?: boolean
+  data: ICourseSummary;
+  gotoCourse?: boolean;
+  onPage?: boolean;
+  displayImage?: boolean;
 }
 const CourseSummary = (props: CourseSummaryProps) => {
-  const { data, gotoCourse, onPage } = props
+  const { data, gotoCourse, onPage, displayImage } = props
   const { category } = data
   const coursePurchased = useCoursePurchased(data.id)
   const { courseDetails, loadingDetails } = useCourseDetails(data.id)
@@ -32,8 +33,8 @@ const CourseSummary = (props: CourseSummaryProps) => {
     </Link>
   )
   return (
-    <div key={data.slug}>
-      <h3>
+    <div key={data.slug} className="d-flex flex-column align-items-start">
+      <h5>
         {
           onPage ?
             data.title
@@ -43,15 +44,19 @@ const CourseSummary = (props: CourseSummaryProps) => {
             </Link>
           )
         }
-      </h3>
+      </h5>
       {linkToCategory}
-      <p className="m-0">{data.description}</p>
-      <div className="d-flex align-items-center">
-        <img className="img-flud mw-100" src={imgUrl} alt={data.thumbnail[0].name} />
-      </div>
-      <p className="m-0">Duration: {formatDuration(data.duration * 1000)}</p>
-      <p className="m-0">Lectures: {data.lectures.length}</p>
-      <p className="m-0">
+      <p className="">{data.description}</p>
+      {
+        displayImage && (
+          <div className="d-flex align-items-center">
+            <img className="img-flud mw-100" src={imgUrl} alt={data.thumbnail[0].name} />
+          </div>
+        )
+      }
+      <p className="small m-0">Duration: {formatDuration(data.duration * 1000)}</p>
+      <p className="small m-0">Lectures: {data.lectures.length}</p>
+      <p className="small m-0">
         Students:{" "}
         {
           loadingDetails ? "Loading..." : courseDetails ? courseDetails.students : 0
@@ -60,9 +65,9 @@ const CourseSummary = (props: CourseSummaryProps) => {
       <ReviewStats slug={data.slug} apiURL={STRAPI} />
       <CommentStats slug={data.slug} apiURL={STRAPI} />
       {
-        (!coursePurchased && !gotoCourse) && <p className="m-0"><strong>${data.price}</strong></p>
+        (!coursePurchased && !gotoCourse) && <p className="small m-0"><strong>${data.price}</strong></p>
       }
-      <div className="d-flex flex-column flex-sm-row">
+      <div className="d-flex flex-column flex-sm-row align-self-stretch align-self-lg-start">
         <div className={"d-flex align-items-center ".concat(styles.botones)}>
           {
             !onPage && (
