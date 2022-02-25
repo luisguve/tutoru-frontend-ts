@@ -14,6 +14,11 @@ export interface ISiteInfo {
   description: string;
 }
 
+interface ISiteInfoRes {
+  data: {
+    attributes: ISiteInfo;
+  };
+}
 class Metadata {
   _navitems: INavigationItem[] | null = null;
   _siteInfo: ISiteInfo | null = null;
@@ -40,12 +45,13 @@ class Metadata {
     try {
       const url = `${STRAPI}/api/home`
       const data = await fetch(url)
-      const siteInfo: ISiteInfo = await data.json()
+      const siteInfo: ISiteInfoRes = await data.json()
       if (!data.ok) {
         throw siteInfo
       }
-      this._siteInfo = siteInfo
-      return siteInfo
+      const { attributes } = siteInfo.data
+      this._siteInfo = attributes
+      return attributes
     } catch(err) {
       console.log("Could not fetch site info:")
       console.log(err)

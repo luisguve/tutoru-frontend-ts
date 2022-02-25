@@ -18,9 +18,9 @@ export interface BreadcrumbElement {
 interface LayoutProps {
   children: React.ReactNode;
   title: string;
-  subtitle: string;
-  header: string;
   navigation: INavigationItem[];
+  subtitle?: string;
+  header?: string;
   isHome?: boolean;
   breadCrumb?: Array<BreadcrumbElement>;
   isPageRep?: boolean;
@@ -56,8 +56,8 @@ const Layout = (props: LayoutProps) => {
             property="og:description"
             content="Plataforma de cursos en línea de matemáticas, física y química"
           />
-          <meta property="og:locale" content="es_VE" />
-          <meta property="og:title" content={header} />
+          <meta property="og:locale" content="en_us" />
+          <meta property="og:title" content={header || title} />
           <meta property="og:url" content={"https://tutoruniversitario.netlify.app".concat(router.asPath)} />
           <meta property="og:type" content="website" />
           <meta property="og:image" content="https://tutoruniversitario.netlify.app/img/banner_principal.jpg" />

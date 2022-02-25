@@ -11,7 +11,13 @@ interface DynamicLinksProps {
 // Navigation tree
 const DynamicLinks = (props: DynamicLinksProps) => {
   const { navigation } = props
-  return navigation.map(item => renderMenuItem({item, depth: 1, parentUrl: ""}))
+  return (
+    <>
+      {
+        navigation.map(item => renderMenuItem({item, depth: 1, parentUrl: ""}))
+      }
+    </>
+  )
 }
 
 export default DynamicLinks
@@ -161,24 +167,3 @@ const renderMenuItem = (props: MenuItemData): React.ReactNode => {
     </li>
   )
 }
-
-/*
-* categories:
-fenomenos de transporte
-  viscosidad y mecanismo del transporte
-  distrib. veloc. en flujo laminar
-    sistemas rectangulares
-    sistemas radiales
-  ec. de variacion para sist. isotermicos
-  balances macroscopicos en sistemas isotermicos
-    sistemas tipo iii
-    bombas
-  a demanda
-
-termodinamica
-  medicion de presion y manometros
-  manejo de tablas de propiedades
-  propiedades de una sustancia pura
-  maquinas termicas
-  descargar tablas de propiedades
-*/

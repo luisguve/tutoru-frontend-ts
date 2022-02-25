@@ -10,8 +10,8 @@ import { INavigationItem } from "../../lib/metadata"
 interface IHeaderProps {
   isHome: boolean;
   title: string;
-  subtitle: string;
-  header: string;
+  subtitle?: string;
+  header?: string;
   navigation: INavigationItem[];
 }
 const Header = (props: IHeaderProps) => {
@@ -22,7 +22,7 @@ const Header = (props: IHeaderProps) => {
         {isHome ? (
           <HeaderHome title={title} subtitle={subtitle} />
         ) : (
-          <HeaderPage title={header} />
+          <HeaderPage title={header || title} />
         )}
       </header>
       <Navbar title={title} navigation={navigation} />
@@ -32,23 +32,22 @@ const Header = (props: IHeaderProps) => {
 
 export default Header
 
-interface IHeaderHomeProps {
-  title: string,
-  subtitle: string,
+interface HeaderHomeProps {
+  title: string;
+  subtitle?: string;
 }
-
-interface IHeaderPageProps {
-  title: string
-}
-
-const HeaderHome = (props: IHeaderHomeProps) => {
+const HeaderHome = (props: HeaderHomeProps) => {
   return (
     <div className={styles.Header__Inicio}>
       <Content {...props} />
     </div>
   )
 }
-const HeaderPage = (props: IHeaderPageProps) => {
+
+interface HeaderPageProps {
+  title: string;
+}
+const HeaderPage = (props: HeaderPageProps) => {
   return (
     <div className={styles.Header__Pagina}>
       <Content {...props} />

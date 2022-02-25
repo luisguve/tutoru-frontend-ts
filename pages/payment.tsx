@@ -7,7 +7,7 @@ import { useContext } from "react"
 import AuthContext from "../context/AuthContext"
 import Layout from '../components/Layout'
 import { useOrder } from "../hooks/order"
-import metadata, { INavigationItem } from "../lib/metadata"
+import metadata, { INavigationItem, ISiteInfo } from "../lib/metadata"
 
 const breadCrumb = [
   {
@@ -21,25 +21,23 @@ const breadCrumb = [
 ]
 
 interface StaticProps {
-  props: {
-    navigation: INavigationItem[];
-  }
+  navigation: INavigationItem[];
+  siteInfo: ISiteInfo;
 }
-export const getStaticProps = async (): Promise<StaticProps> => {
+export const getStaticProps = async (): Promise<{props: StaticProps}> => {
   const navigation = await metadata.loadNavigation()
+  const siteInfo = await metadata.loadSiteInfo()
   return {
     props: {
-      navigation
+      navigation,
+      siteInfo
     }
   }
 }
 
-interface PaymentProps {
-  navigation: INavigationItem[];
-}
-const Payment = (props: PaymentProps) => {
+const Payment = (props: StaticProps) => {
 
-  const { navigation } = props
+  const { navigation, siteInfo: {site_title} } = props
 
   const router = useRouter()
   const { checkout_session } = router.query
@@ -47,15 +45,14 @@ const Payment = (props: PaymentProps) => {
 
   return (
     <Layout
-      title="abc"
-      subtitle="def"
+      title={site_title}
       breadCrumb={breadCrumb}
-      header="Tutor Universitario"
+      header={"Payment confirmation"}
       navigation={navigation}
     >
       <div>
         <Head>
-          <title>Payment Confirmation</title>
+          <title>{site_title} | Payment Confirmation</title>
         </Head>
         <>
           {

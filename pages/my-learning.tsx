@@ -7,7 +7,7 @@ import AuthContext from "../context/AuthContext"
 import Layout from "../components/Layout"
 import { usePurchaseHistory } from "../hooks/history"
 import CourseSummary from "../components/Category/CourseSummary"
-import metadata, { INavigationItem } from "../lib/metadata"
+import metadata, { INavigationItem, ISiteInfo } from "../lib/metadata"
 
 const breadCrumb = [
   {
@@ -21,25 +21,23 @@ const breadCrumb = [
 ]
 
 interface StaticProps {
-  props: {
-    navigation: INavigationItem[];
-  }
+  navigation: INavigationItem[];
+  siteInfo: ISiteInfo;
 }
-export const getStaticProps = async (): Promise<StaticProps> => {
+export const getStaticProps = async (): Promise<{props: StaticProps}> => {
   const navigation = await metadata.loadNavigation()
+  const siteInfo = await metadata.loadSiteInfo()
   return {
     props: {
-      navigation
+      navigation,
+      siteInfo
     }
   }
 }
 
-interface MyLearningProps {
-  navigation: INavigationItem[];
-}
-const MyLearning = (props: MyLearningProps) => {
+const MyLearning = (props: StaticProps) => {
   const { user, logoutUser } = useContext(AuthContext)
-  const { navigation } = props
+  const { navigation, siteInfo: {site_title} } = props
 
   const {
     orders, loadingOrders,
@@ -49,13 +47,14 @@ const MyLearning = (props: MyLearningProps) => {
   if (!user) {
     return (
       <Layout
-        title="Tutor Universitatio"
-        subtitle="def"
+        title={site_title}
         header="My learning"
         navigation={navigation}
         breadCrumb={breadCrumb}
       >
-      <Head><title>Tutor Universitatio | My learning</title></Head>
+      <Head>
+        <title>{site_title} | My learning</title>
+      </Head>
       <h2 className="text-center">Login to see your courses</h2>
       </Layout>
     )
@@ -63,20 +62,21 @@ const MyLearning = (props: MyLearningProps) => {
   return (
     <Layout
       title="Tutor Universitatio"
-      subtitle="def"
       header="My learning"
       navigation={navigation}
       breadCrumb={breadCrumb}
     >
-      <Head><title>Tutor Universitatio | Mi cuenta</title></Head>
+      <Head>
+        <title>{site_title} | My learning</title>
+      </Head>
       <div>
         {
           <>
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-secondary px-2 py-0"
-                onClick={() => logoutUser()}
-              >salir</button>
+                onClick={logoutUser}
+              >logout</button>
             </div>
             <h5 className="text-center">Logged in as {user.username}</h5>
           </>

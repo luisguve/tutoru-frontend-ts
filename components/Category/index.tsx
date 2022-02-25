@@ -1,3 +1,5 @@
+import Head from "next/head"
+
 import Layout from "../Layout"
 import { ICategoryData } from "../../lib/categorySetup"
 import CoursePage from "./CoursePage"
@@ -8,9 +10,11 @@ interface CategoryPageProps {
   props: ICategoryData
 }
 const CategoryPage = ({props}: CategoryPageProps) => {
-  const { data: {summary}, isCourseRep, breadcrumb, navigation } = props
+  const { data: {summary}, isCourseRep, breadcrumb, navigation, siteInfo } = props
+  const { site_title } = siteInfo
+
   let component: React.ReactNode = <p>Unknown type of content</p>
-  let header = "Tutor Universitario"
+  let header = summary.title
   switch (summary.kind) {
     case "course":
       if (isCourseRep) {
@@ -18,24 +22,25 @@ const CategoryPage = ({props}: CategoryPageProps) => {
       } else {
         component = <CoursePage data={summary} />
       }
-      header = `Tutor Universitario - ${summary.title} Course`
+      header = `${summary.title} Course`
       break;
     
     case "category":
       component = <CategoryIndex data={summary} />
-      header = `Tutor Universitario - ${summary.title}`
       break;
   }
 
   return (
     <Layout
-      title={summary.title}
-      subtitle="Course"
+      title={site_title}
       header={header}
       isPageRep={isCourseRep}
       breadCrumb={breadcrumb}
       navigation={navigation}
     >
+    <Head>
+      <title>{site_title} | {summary.title}</title>
+    </Head>
     {component}
     </Layout>
   )
