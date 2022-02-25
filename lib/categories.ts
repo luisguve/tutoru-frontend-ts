@@ -31,7 +31,6 @@ class CategoriesIndex {
     if (this._categories) {
       const category = this._categories.find(c => c.slug === slug)
       if (category) {
-        console.log("found categoria")
         return category
       }
     }
