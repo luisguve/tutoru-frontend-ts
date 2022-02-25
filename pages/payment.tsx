@@ -7,7 +7,7 @@ import { useContext } from "react"
 import AuthContext from "../context/AuthContext"
 import Layout from '../components/Layout'
 import { useOrder } from "../hooks/order"
-import { loadNavigation, INavigationItem } from "../lib/metadata"
+import metadata, { INavigationItem } from "../lib/metadata"
 
 const breadCrumb = [
   {
@@ -26,7 +26,7 @@ interface StaticProps {
   }
 }
 export const getStaticProps = async (): Promise<StaticProps> => {
-  const navigation = await loadNavigation()
+  const navigation = await metadata.loadNavigation()
   return {
     props: {
       navigation

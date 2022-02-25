@@ -1,18 +1,64 @@
 import categoriesIndex from "./categories"
-
-export const loadNavigation = async (): Promise<INavigationItem[]> => {
-  const navitems = await categoriesIndex.navigation()
-  return [
-    {
-      title: "categories",
-      slug: "#",
-      subcategories: navitems
-    }
-  ]
-}
+import { STRAPI } from "./urls"
 
 export interface INavigationItem {
   title: string;
   slug: string;
   subcategories: INavigationItem[];
 }
+
+export interface ISiteInfo {
+  site_title: string;
+  site_subtitle: string;
+  home_title: string;
+  description: string;
+}
+
+class Metadata {
+  _navitems: INavigationItem[] | null = null;
+  _siteInfo: ISiteInfo | null = null;
+  // Returns the hierarchical tree of every category from the API.
+  loadNavigation = async (): Promise<INavigationItem[]> => {
+    if (this._navitems) {
+      return this._navitems
+    }
+    const navitems = await categoriesIndex.navigation()
+    return [
+      {
+        title: "categories",
+        slug: "#",
+        subcategories: navitems
+      }
+    ]
+    this._navitems = navitems
+    return navitems
+  }
+  loadSiteInfo = async (): Promise<ISiteInfo> => {
+    if (this._siteInfo) {
+      return this._siteInfo
+    }
+    try {
+      const url = `${STRAPI}/api/home`
+      const data = await fetch(url)
+      const siteInfo: ISiteInfo = await data.json()
+      if (!data.ok) {
+        throw siteInfo
+      }
+      this._siteInfo = siteInfo
+      return siteInfo
+    } catch(err) {
+      console.log("Could not fetch site info:")
+      console.log(err)
+      return {
+        site_title: "",
+        site_subtitle: "",
+        home_title: "",
+        description: ""
+      }
+    }
+  }
+}
+
+const metadata = new Metadata()
+
+export default metadata

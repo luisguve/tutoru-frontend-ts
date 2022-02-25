@@ -17,7 +17,7 @@ import {
 import { BreadcrumbElement } from "../components/Layout"
 import { ICategory } from "./categories"
 
-import { loadNavigation, INavigationItem } from "./metadata"
+import metadata, { INavigationItem } from "./metadata"
 
 interface getCategoryDataProps {
   params: {
@@ -45,7 +45,7 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
     return null
   }
 
-  const navigation = await loadNavigation()
+  const navigation = await metadata.loadNavigation()
   // const informacionSitio = await cargarInformacionSitio()
 
   // Indice para construir el breadcrumb y el contenido de cada seccion

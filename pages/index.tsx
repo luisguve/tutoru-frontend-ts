@@ -2,12 +2,12 @@ import Head from 'next/head'
 
 import Layout from '../components/Layout'
 import { getCategoriesSummary, ICategorySummary } from "../lib/content"
-import { loadNavigation, INavigationItem } from "../lib/metadata"
+import metadata, { INavigationItem } from "../lib/metadata"
 import { CategorySummary } from "../components/Category/CategoryIndex"
 
 export async function getStaticProps() {
   const { categories } = await getCategoriesSummary()
-  const navigation = await loadNavigation()
+  const navigation = await metadata.loadNavigation()
   return {
     props: {
       categories,
