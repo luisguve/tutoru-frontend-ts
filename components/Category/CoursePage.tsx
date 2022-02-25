@@ -57,8 +57,10 @@ const CourseDesc = (props: CoursePageProps) => {
   }, [coursePurchased])
   return (
     <>
-      <CourseSummary onPage data={data} />
-      <Markdown data={data.long_description} />
+      <CourseSummary onPage displayImage data={data} />
+      <div className="my-3">
+        <Markdown data={data.long_description} />
+      </div>
       <Tabs>
         <TabList>
           <Tab>Reviews</Tab>
