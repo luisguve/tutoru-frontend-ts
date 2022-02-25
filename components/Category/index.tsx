@@ -1,9 +1,8 @@
 import Layout from "../Layout"
 import { ICategoryData } from "../../lib/categorySetup"
-import { ICourseSummary, ICategorySummary } from "../../lib/content"
 import CoursePage from "./CoursePage"
 import CourseRep from "./CourseRep"
-import CourseSummary from "./CourseSummary"
+import CategoryIndex from "./CategoryIndex"
 
 interface CategoryPageProps {
   props: ICategoryData
@@ -43,22 +42,3 @@ const CategoryPage = ({props}: CategoryPageProps) => {
 }
 
 export default CategoryPage
-
-interface CategoryIndexProps {
-  data: ICategorySummary;
-}
-
-const CategoryIndex = ({ data }: CategoryIndexProps) => {
-  const { courses, title, description, thumbnail } = data
-  let coursesJSX: React.ReactNode = <p>There are no courses in this category</p>
-  if (courses) {
-    coursesJSX = courses.map(c => <CourseSummary data={c} key={c.slug} />)
-  }
-  return (
-    <>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      {coursesJSX}
-    </>
-  )
-}

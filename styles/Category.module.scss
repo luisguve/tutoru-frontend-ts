@@ -1,0 +1,11 @@
+.slider-thumbnail {width: 100%;}
+.slider-content {width: 100%;}
+
+@media screen and (min-width: 992px) {
+  .slider-thumbnail {
+    width: 40%;
+  }
+  .slider-content {
+    width: 60%;
+  }
+}
