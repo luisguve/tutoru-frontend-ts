@@ -18,7 +18,7 @@ const AddButton = ({ item }: AddButtonProps) => {
     setAdded(true)
   }
   const removeFromCart = () => {
-    remove(item.id)
+    remove(item)
     setAdded(false)
   }
   // Este hook cambia el valor del estado "agregado" a false si se ha quitado
