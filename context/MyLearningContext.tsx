@@ -4,12 +4,14 @@ import AuthContext from "./AuthContext"
 import { STRAPI } from "../lib/urls"
 
 interface IMyLearningContext {
-  coursesIDs: ICourse[] | null,
-  loadingItems: boolean
+  coursesIDs: ICourse[] | null;
+  ejerciciosIDs: IEjercicio[] | null;
+  loadingItems: boolean;
 }
 
 const defaultState: IMyLearningContext = {
   coursesIDs: null,
+  ejerciciosIDs: null,
   loadingItems: false
 }
 
@@ -23,14 +25,18 @@ interface ICourse {
     id: number
   }
 }
+interface IEjercicio {
+  id: number;
+}
 interface IMyLearning {
-  courses: ICourse[]
+  courses: ICourse[];
+  ejercicios: IEjercicio[];
 }
 
 export const MyLearningProvider = (props: MyLearningProviderProps) => {
 
   const [loadingItems, setLoading] = useState(false)
-  const [items, setItems] = useState<ICourse[] | null>(null)
+  const [items, setItems] = useState<IMyLearning | null>(null)
 
   const { user } = useContext(AuthContext)
   // Fetch the IDs of the courses that the user has purchased (if logged in)
@@ -40,9 +46,12 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
     }
     const { data } = getSession()
     if (data) {
-      setItems(data.courses)
+      setItems(data)
       if (!data.courses || !data.courses.length) {
         console.log("No courses purchased (from local storage)")
+      }
+      if (!data.ejercicios || !data.ejercicios.length) {
+        console.log("No ejercicios purchased (from local storage)")
       }
     }
     // Get the IDs of items purchased
@@ -72,7 +81,7 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
         console.log(msg)
       }
 
-      setItems(itemsData.courses)
+      setItems(itemsData)
       saveSession(itemsData)
     } catch (err) {
       console.log("Could not request data")
@@ -87,7 +96,8 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
   }, [user])
   return (
     <MyLearningContext.Provider value={{
-      coursesIDs: items,
+      coursesIDs: items ? items.courses : null,
+      ejerciciosIDs: items ? items.ejercicios : null,
       loadingItems
     }}>
       {props.children}
@@ -100,7 +110,6 @@ export default MyLearningContext
 interface ISession {
   data?: IMyLearning
 }
-
 const getSession = (): ISession => {
   if (typeof(Storage) !== undefined) {
     const dataStr = localStorage.getItem("data")

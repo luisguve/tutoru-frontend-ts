@@ -55,9 +55,28 @@ export interface ICategorySummary {
   thumbnail: IThumbnail[];
   courses: ICourseSummary[];
   featured_courses: ICourseSummary[];
+  ejercicios: IEjercicioSummary[];
+  featured_ejercicios: IEjercicioSummary[];
   courses_count: number;
+  ejercicios_count: number;
   subcategories: ICategorySummary[];
   kind: "category";
+}
+
+export interface IEjercicioSummary {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  thumbnail: IThumbnail[];
+  category: {
+    slug: string;
+    title: string;
+  };
+  kind: "ejercicio";
 }
 
 interface ICategorySummaryRes {
@@ -72,6 +91,17 @@ export async function getCategorySummary(slug: string): Promise<ICategorySummary
   const summary: ICategorySummaryRes = await summary_res.json()
 
   return summary.category
+}
+
+/**
+* Obtiene el resumen del ejercicio
+*/
+export async function getEjercicioSummary(slug: string): Promise<IEjercicioSummary> {
+  const url = `${STRAPI}/api/masterclass/ejercicios/${slug}`
+  const summary_res = await fetch(url)
+  const summary: IEjercicioSummary = await summary_res.json()
+
+  return summary
 }
 
 /**
@@ -159,17 +189,24 @@ export function buildIndex({parentUrl, root}: ITree) {
   }
   result.push(urlPage)
   root.courses.map(c => {
-    const coursePage = {
+    const coursePage: ITreeItem = {
       params: {
         page: [...page, "course", c.slug]
       }
     }
-    const courseRepPage = {
+    const courseRepPage: ITreeItem = {
       params: {
         page: [...page, "course", c.slug, "view"]
       }
     }
     result.push(coursePage)
+  })
+  root.ejercicios.map(e => {
+    const ejercicioPage: ITreeItem = {
+      params: {
+        page: [...page, e.slug]
+      }
+    }
   })
   root.subcategories.map(subcategory => {
     const subIndex =  buildIndex({
@@ -185,7 +222,6 @@ interface ResultCurrentCategory {
   currentCategory: ICategory;
   isCategory: boolean;
 }
-
 /**
 * Retorna el indice de la categoria indicado por path.
 * Retorna null si no se encuentra el indice que corresponde a path o
@@ -216,7 +252,7 @@ export const indexCurrentCategory = (index: ICategory, path: string[]): ResultCu
         if (category.slug === page) {
           // Indice de categoria encontrado
           return {
-            currentCategory: category,
+            currentCategory,
             isCategory: true,
           }
         }
@@ -342,6 +378,23 @@ export const buildBreadcrumb = (index: ICategory, path: string[]): IBuildBreadcr
             name: "View",
             url: `${newUrl}/view`
           }
+        }
+        pages.push(lastBreadcrumbElement)
+      } else {
+        // La ruta no incluye course - esta pagina es de un ejercicio
+        const ejercicio = currentCategory.ejercicios.find(c => c.slug === page)
+        if (!ejercicio) {
+          return
+        }
+        let base
+        if (!pages.length) {
+          base =  `/${index.slug}`
+        } else {
+          base = pages[pages.length - 1].url
+        }
+        let lastBreadcrumbElement: BreadcrumbElement = {
+          name: ejercicio.title,
+          url: `${base}/${page}`
         }
         pages.push(lastBreadcrumbElement)
       }

@@ -7,6 +7,7 @@ import AuthContext from "../context/AuthContext"
 import Layout from "../components/Layout"
 import { usePurchaseHistory } from "../hooks/history"
 import CourseSummary from "../components/Category/CourseSummary"
+import ClassifiedItems from "../components/Category/ClassifiedItems"
 import metadata, { INavigationItem, ISiteInfo } from "../lib/metadata"
 
 const breadCrumb = [
@@ -41,7 +42,7 @@ const MyLearning = (props: StaticProps) => {
 
   const {
     orders, loadingOrders,
-    learning: { courses }, loadingLearning
+    learning: { courses, ejercicios }, loadingLearning
   } = usePurchaseHistory()
 
   if (!user) {
@@ -83,21 +84,11 @@ const MyLearning = (props: StaticProps) => {
         }
         {
           loadingLearning ?
-          <h4 className="text-center">
-            Loading your courses...
-          </h4>
-          :
-          (!courses || !courses.length) ?
             <h4 className="text-center">
-              Here will appear your courses
+              Loading your courses...
             </h4>
           :
-            <div className="my-5">
-              <h2 className="text-center mb-3">Your learning</h2>
-              {
-                courses.map(({course:c}) => <CourseSummary data={c} key={c.slug} gotoCourse displayImage />)
-              }
-            </div>
+            <ClassifiedItems courses={courses} ejercicios={ejercicios} />
         }
         {
           loadingOrders ?

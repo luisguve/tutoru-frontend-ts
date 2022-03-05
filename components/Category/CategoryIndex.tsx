@@ -4,6 +4,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 
 import CourseSummary from "./CourseSummary"
+import EjercicioSummary from "./EjercicioSummary"
 import { ICategorySummary } from "../../lib/content"
 import { STRAPI } from "../../lib/urls"
 import Subcategories from "./Subcategories"
@@ -16,14 +17,16 @@ interface CategorySummaryProps {
 export const CategorySummary = (props: CategorySummaryProps) => {
   const { data, displayLink } = props
   const {
-    courses,
     slug,
-    featured_courses,
     title,
-    description,
+    courses,
     thumbnail,
+    description,
+    subcategories,
     courses_count,
-    subcategories
+    featured_courses,
+    ejercicios_count,
+    featured_ejercicios
   } = data
 
   const imgUrl = `${STRAPI}${thumbnail[0].url}`
@@ -38,6 +41,7 @@ export const CategorySummary = (props: CategorySummaryProps) => {
        }>
         <p>{description}</p>
         <p>{courses_count} course{courses_count === 1 ? "" : "s"}</p>
+        <p>{ejercicios_count} ejercicio{ejercicios_count === 1 ? "" : "s"}</p>
         <Subcategories data={subcategories} parentUrl={slug} fontSize={14} />
       </div>
     </div>
@@ -45,7 +49,7 @@ export const CategorySummary = (props: CategorySummaryProps) => {
 
   const totalCourses = courses.concat(featured_courses)
 
-  const slidesJSX = [firstSlide].concat(totalCourses.map(c => {
+  const coursesSlides = totalCourses.map(c => {
     const imgUrl = `${STRAPI}${c.thumbnail[0].url}`
     return (
       <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={c.slug}>
@@ -57,7 +61,23 @@ export const CategorySummary = (props: CategorySummaryProps) => {
         </div>
       </div>
     )
-  }))
+  })
+
+  const ejerciciosSlides = featured_ejercicios.map(e => {
+    const imgUrl = `${STRAPI}${e.thumbnail[0].url}`
+    return (
+      <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={e.slug}>
+        <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
+          <img src={imgUrl} alt={e.thumbnail[0].name} />
+        </div>
+        <div className={styles["slider-content"]+" pt-3 pt-lg-0 ps-lg-3 py-1"}>
+          <EjercicioSummary data={e} displayDescription />
+        </div>
+      </div>
+    )
+  })
+
+  const slidesJSX = [firstSlide].concat([...coursesSlides, ...ejerciciosSlides])
 
   return (
     <>
@@ -89,15 +109,26 @@ const CategoryIndex = ({ data }: CategoryIndexProps) => {
     title,
     courses,
     thumbnail,
+    ejercicios,
     description,
     subcategories,
-    featured_courses
+    featured_courses,
+    featured_ejercicios
   } = data
 
   const totalCourses = courses.concat(featured_courses)
+  const totalEjercicios = ejercicios.concat(featured_ejercicios)
 
   const totalCoursesJSX = totalCourses.map(c => (
-    <CourseSummary data={c} key={c.slug} displayImage />
+    <div className="mb-4">
+      <CourseSummary data={c} key={c.slug} displayImage />
+    </div>
+  ))
+
+  const totalEjerciciosJSX = totalEjercicios.map(e => (
+    <div className="mb-4">
+      <EjercicioSummary data={e} key={e.slug} displayImage />
+    </div>
   ))
 
   return (
@@ -113,6 +144,11 @@ const CategoryIndex = ({ data }: CategoryIndexProps) => {
       {
         (totalCoursesJSX.length > 0) ? totalCoursesJSX : (
           <p>There are no courses in this category</p>
+        )
+      }
+      {
+        (totalEjerciciosJSX.length > 0) ? totalEjerciciosJSX : (
+          <p>No hay ejercicios en esta categoría</p>
         )
       }
     </>

@@ -4,7 +4,7 @@ import { toast } from "react-toastify"
 import { loadStripe } from "@stripe/stripe-js"
 
 import AuthContext from "../context/AuthContext"
-import BasketContext, { IItem } from "../context/BasketContext"
+import BasketContext, { IItem, COURSE_PREFIX } from "../context/BasketContext"
 import { useData, IData } from "../hooks/basket"
 import { cleanSession } from "../context/MyLearningContext"
 import styles from "../styles/Carrito.module.scss"
@@ -49,12 +49,13 @@ export default function Basket() {
       return (
         <button
           className="btn btn-outline-danger py-0"
-          onClick={() => remove(item.id)}
+          onClick={() => remove(item)}
         >Remove</button>
       )
     }
     return data.items.map(item => {
-      const label = item.title
+      // if the item is a ejercicio, display it's category
+      const label = item.kind === "course" ? item.title : `${item.category.title} - ${item.title}`
       return (
         <div
           className="w-100 d-flex justify-content-between align-items-center mb-1"
@@ -170,7 +171,15 @@ const Checkout = (props: BasketTabProps) => {
     }
     setDisabled("disabled")
     try {
-      const IDs: number[] = itemsIDs.map(({ id }) => id)
+      const coursesIDs: string[] = []
+      const ejerciciosIDs: string[] = []
+      itemsIDs.map(({id}) => {
+        if (id.startsWith(COURSE_PREFIX)) {
+          coursesIDs.push(id.replace(COURSE_PREFIX, ""))
+        } else {
+          ejerciciosIDs.push(id)
+        }
+      })
       const stripe = await stripePromise
       if (!stripe) {
         throw "Null Stripe"
@@ -184,7 +193,8 @@ const Checkout = (props: BasketTabProps) => {
           "Content-type": "application/json"
         },
         body: JSON.stringify({
-          courses: IDs
+          courses: coursesIDs,
+          ejercicios: ejerciciosIDs
         })
       }
 
