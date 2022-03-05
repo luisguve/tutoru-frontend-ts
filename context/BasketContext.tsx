@@ -5,20 +5,27 @@ import MyLearningContext from "./MyLearningContext"
 
 import styles from "../styles/Carrito.module.scss"
 
+export const COURSE_PREFIX = "course--"
+
 export interface IItem {
-  id: number,
-  title: string,
-  price: number,
-  slug: string
+  id: number | string;
+  title: string;
+  price: number;
+  slug: string;
+  kind: "course" | "ejercicio";
+  category: {
+    slug: string;
+    title: string;
+  };
 }
 export interface IItemID {
- id: number
+ id: string;
 }
 export interface IBasketContext {
   items: IItem[],
   itemsIDs: IItemID[],
   add: (item: IItem) => void,
-  remove: (itemID: number) => void,
+  remove: (item: IItem) => void,
   clean: () => void,
   step1: boolean,
   step2: boolean,
@@ -51,7 +58,8 @@ export interface IBasketProviderProps {
 export const BasketProvider = (props: IBasketProviderProps) => {
   const { user } = useContext(AuthContext)
   const {
-    coursesIDs: coursesPurchased
+    coursesIDs: coursesPurchased,
+    ejerciciosIDs: ejerciciosPurchased
   } = useContext(MyLearningContext)
 
   const [items, setItems] = useState<IItem[]>(() => {
@@ -84,24 +92,37 @@ export const BasketProvider = (props: IBasketProviderProps) => {
   const [classBasketContainer, setClass] = useState<string>(styles.Contenedor__Carrito)
 
   const add = (item: IItem) => {
+    // copy the item object
+    const newItem: IItem = JSON.parse(JSON.stringify(item))
+    let prefix = ""
+    // Add a prefix to course items
+    if (newItem.kind === "course") {
+      prefix = COURSE_PREFIX
+    }
+    newItem.id = `${prefix}${newItem.id}`
+
     // Avoid duplicate items
-    if (itemsIDs.some(i => i.id === item.id)) {
+    if (itemsIDs.some(i => `${prefix}${i.id}` === newItem.id)) {
       return
     }
 
-    const newItems = [...items, item]
+    const newItems = [...items, newItem]
     setItems(newItems)
-    const newIDs = [...itemsIDs, {id: item.id}]
+    const newIDs = [...itemsIDs, {id: newItem.id}]
     setItemsIDs(newIDs)
 
     saveSession(newItems, newIDs)
   }
 
-  const remove = (itemID: number) => {
+  const remove = (item: IItem) => {
+    let itemID = item.id.toString()
+    if (item.kind === "course" && !itemID.startsWith(COURSE_PREFIX)) {
+      itemID = COURSE_PREFIX.concat(itemID)
+    }
 
-    const newItems = items.filter(i => i.id != itemID)
+    const newItems = items.filter(i => i.id !== itemID)
     setItems(newItems)
-    const newIDs = itemsIDs.filter(a => a.id != itemID)
+    const newIDs = itemsIDs.filter(i => i.id !== itemID)
     setItemsIDs(newIDs)
 
     saveSession(newItems, newIDs)
@@ -134,13 +155,40 @@ export const BasketProvider = (props: IBasketProviderProps) => {
   useEffect(() => {
     // Remove the items that the user has purchased from the basket
     if (coursesPurchased) {
-      itemsIDs.map(item => {
-        if (coursesPurchased.some(c => c.course.id === item.id)) {
-          remove(item.id)
+      itemsIDs.map(({id: itemID}) => {
+        if (!itemID.startsWith(COURSE_PREFIX)) {
+          return
+        }
+        const userPurchasedThis = coursesPurchased.some(({ course }) => {
+          // Remove the prefix for courses from the ID
+          const idToCompare = itemID.replace(COURSE_PREFIX, "")
+          return course.id.toString() === idToCompare
+        })
+
+        if (userPurchasedThis) {
+          const item = items.find(i => i.id === itemID)
+          if (item) {
+            remove(item)
+          }
         }
       })
     }
-  }, [coursesPurchased])
+    if (ejerciciosPurchased) {
+      itemsIDs.map(({id: itemID}) => {
+        if (itemID.startsWith(COURSE_PREFIX)) {
+          return
+        }
+        const userPurchasedThis = ejerciciosPurchased.some(({id}) => id.toString() === itemID)
+
+        if (userPurchasedThis) {
+          const item = items.find(i => i.id === itemID)
+          if (item) {
+            remove(item)
+          }
+        }
+      })
+    }
+  }, [coursesPurchased, ejerciciosPurchased])
 
   return (
     <BasketContext.Provider
@@ -174,10 +222,11 @@ interface ISession {
 
 const getSession = (): ISession => {
   if (typeof(Storage) !== undefined) {
-    const data = JSON.parse(localStorage.getItem("data"))
-    if (data) {
+    const dataStr = localStorage.getItem("data")
+    if (dataStr) {
+      const data = JSON.parse(dataStr)
       return {
-        data: data.basket
+        data: data["basket"]
       }
     }
   }
@@ -185,7 +234,11 @@ const getSession = (): ISession => {
 }
 const saveSession = (items: IItem[], itemsIDs: IItemID[]) => {
   if (typeof(Storage) !== undefined) {
-    const data = JSON.parse(localStorage.getItem("data"))
+    const dataStr = localStorage.getItem("data")
+    let data = {}
+    if (dataStr) {
+      data = JSON.parse(dataStr)
+    }
     localStorage.setItem("data", JSON.stringify({
       ...data,
       basket: {
@@ -197,8 +250,11 @@ const saveSession = (items: IItem[], itemsIDs: IItemID[]) => {
 }
 const cleanSession = () => {
   if (typeof(Storage) !== undefined) {
-    const data = JSON.parse(localStorage.getItem("data"))
-    delete data.basket
-    localStorage.setItem("data", JSON.stringify(data))
+    const dataStr = localStorage.getItem("data")
+    if (dataStr) {
+      const data = JSON.parse(dataStr)
+      delete data["basket"]
+      localStorage.setItem("data", JSON.stringify(data))
+    }
   }
 }
