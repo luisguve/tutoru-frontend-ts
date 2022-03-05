@@ -13,10 +13,11 @@ interface CourseSummaryProps {
   data: ICourseSummary;
   gotoCourse?: boolean;
   onPage?: boolean;
+  hideDescription?: boolean;
   displayImage?: boolean;
 }
 const CourseSummary = (props: CourseSummaryProps) => {
-  const { data, gotoCourse, onPage, displayImage } = props
+  const { data, gotoCourse, onPage, displayImage, hideDescription } = props
   const { category } = data
   const coursePurchased = useCoursePurchased(data.id)
   const { courseDetails, loadingDetails } = useCourseDetails(data.id)
@@ -34,19 +35,23 @@ const CourseSummary = (props: CourseSummaryProps) => {
   )
   return (
     <div key={data.slug} className="d-flex flex-column align-items-start">
-      <h5>
-        {
-          onPage ?
-            data.title
-          : (
-            <Link href={courseUrl}>
-              <a>{data.title}</a>
-            </Link>
-          )
-        }
-      </h5>
-      {linkToCategory}
-      <p className="">{data.description}</p>
+      <div className="d-flex flex-wrap align-items-center">
+        <h5 className="me-3 mb-1">
+          {
+            onPage ?
+              data.title
+            : (
+              <Link href={courseUrl}>
+                <a>{data.title}</a>
+              </Link>
+            )
+          }
+        </h5>
+        {linkToCategory}
+      </div>
+      {
+        (!hideDescription) && <p>{data.description}</p>
+      }
       {
         displayImage && (
           <div className="d-flex align-items-center">
