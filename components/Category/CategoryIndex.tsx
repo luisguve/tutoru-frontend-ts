@@ -29,7 +29,13 @@ export const CategorySummary = (props: CategorySummaryProps) => {
     featured_ejercicios
   } = data
 
-  const imgUrl = `${STRAPI}${thumbnail[0].url}`
+  const imgPath = thumbnail[0].url
+  let imgUrl = `${STRAPI}${imgPath}`
+  if (imgPath.startsWith("http")) {
+    // this is an absolute URL
+    imgUrl = imgPath
+  }
+
   const firstSlide = (
     <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={slug}>
       <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
@@ -71,7 +77,7 @@ export const CategorySummary = (props: CategorySummaryProps) => {
           <img src={imgUrl} alt={e.thumbnail[0].name} />
         </div>
         <div className={styles["slider-content"]+" pt-3 pt-lg-0 ps-lg-3 py-1"}>
-          <EjercicioSummary data={e} displayDescription />
+          <EjercicioSummary data={e} displayDescription hideDownloadButtton />
         </div>
       </div>
     )
@@ -120,14 +126,14 @@ const CategoryIndex = ({ data }: CategoryIndexProps) => {
   const totalEjercicios = ejercicios.concat(featured_ejercicios)
 
   const totalCoursesJSX = totalCourses.map(c => (
-    <div className="mb-4">
-      <CourseSummary data={c} key={c.slug} displayImage />
+    <div className="mb-4" key={c.slug}>
+      <CourseSummary data={c} displayImage />
     </div>
   ))
 
   const totalEjerciciosJSX = totalEjercicios.map(e => (
-    <div className="mb-4">
-      <EjercicioSummary data={e} key={e.slug} displayImage />
+    <div className="mb-4" key={e.slug}>
+      <EjercicioSummary data={e} displayImage />
     </div>
   ))
 
