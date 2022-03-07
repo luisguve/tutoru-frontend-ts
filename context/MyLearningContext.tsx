@@ -42,6 +42,7 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
   // Fetch the IDs of the courses that the user has purchased (if logged in)
   const getItems = async () => {
     if (!user) {
+      setItems(null)
       return
     }
     const { data } = getSession()
