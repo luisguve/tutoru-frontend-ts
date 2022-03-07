@@ -1,12 +1,14 @@
-import { useState, useContext } from "react"
+import { useState, useContext, createRef } from "react"
 import { toast } from 'react-toastify';
 
-import LoginContext, { ACTION_LOGIN, ACTION_SIGNUP } from "../context/LoginContext"
 import AuthContext from "../context/AuthContext"
 import styles from "../styles/Login.module.css"
 import { STRAPI } from "../lib/urls"
 
-const RegisterForm = () => {
+interface FormInputsProps {
+  close: () => void;
+}
+const RegisterForm = (props: FormInputsProps) => {
   const { loginUser } = useContext(AuthContext)
   const [sending, setSending] = useState(false)
   const [username, setName] = useState("")
@@ -14,6 +16,18 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("")
   const [password2, setPassword2] = useState("")
   const [mostrar, setMostrar] = useState(false)
+  const resetInputs = () => {
+    setSending(false)
+    setName("")
+    setEmail("")
+    setPassword("")
+    setPassword2("")
+    setMostrar(false)
+  }
+  const close = () => {
+    resetInputs()
+    props.close()
+  }
   const validInputs = () => {
     return username !== "" && email !== "" && password !== "" && password2 !== ""
   }
@@ -65,6 +79,7 @@ const RegisterForm = () => {
         id: data.user.id,
         token: data.jwt
       })
+      close()
       toast("Register successful")
     })
     .catch(data => {
@@ -79,58 +94,64 @@ const RegisterForm = () => {
     }
   }
   return (
-    <div className="d-flex flex-column border rounded p-1 p-md-3">
-      <h4 className="fs-5 text-center">Register</h4>
-      <form className="d-flex flex-column" onSubmit={handleSubmit}>
-        <label className="d-flex flex-column mb-2">
-          Full name
-          <input className="form-control" type="text" value={username} onChange={handleName} required />
-        </label>
-        <label className="d-flex flex-column mb-2">
-          Email address
-          <input className="form-control" type="email" value={email} onChange={handleEmail} required />
-        </label>
-        <label className="d-flex flex-column mb-2">
-          Password
-          <input className="form-control"
-            type={mostrar ? "text" : "password"}
-            value={password}
-            onChange={handlePassword}
-            required
-          />
-        </label>
-        <label className="d-flex flex-column mb-2">
-          Confirm password
-          <input className="form-control"
-            type={mostrar ? "text" : "password"}
-            value={password2}
-            onChange={handlePassword2}
-            required
-          />
-        </label>
-        <label className="d-flex">
-          <input
-            className="form-check me-1"
-            type="checkbox"
-            value={mostrar ? "checked" : undefined}
-            onChange={() => setMostrar(!mostrar)}
-          />
-          View password
-        </label>
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={(!validInputs() || sending) ? true : false}
-        >{sending ? "Please wait..." : "Register"}</button>
-      </form>
-    </div>
+    <form className="d-flex flex-column" onSubmit={handleSubmit}>
+      <label className="d-flex flex-column mb-2">
+        Full name
+        <input className="form-control" type="text" value={username} onChange={handleName} required />
+      </label>
+      <label className="d-flex flex-column mb-2">
+        Email address
+        <input className="form-control" type="email" value={email} onChange={handleEmail} required />
+      </label>
+      <label className="d-flex flex-column mb-2">
+        Password
+        <input className="form-control"
+          type={mostrar ? "text" : "password"}
+          value={password}
+          onChange={handlePassword}
+          required
+        />
+      </label>
+      <label className="d-flex flex-column mb-2">
+        Confirm password
+        <input className="form-control"
+          type={mostrar ? "text" : "password"}
+          value={password2}
+          onChange={handlePassword2}
+          required
+        />
+      </label>
+      <label className="d-flex">
+        <input
+          className="form-check me-1"
+          type="checkbox"
+          value={mostrar ? "checked" : undefined}
+          onChange={() => setMostrar(!mostrar)}
+        />
+        View password
+      </label>
+      <button
+        type="submit"
+        className="btn btn-primary"
+        disabled={(!validInputs() || sending) ? true : false}
+      >{sending ? "Please wait..." : "Register"}</button>
+    </form>
   )
 }
-const LoginForm = () => {
+const LoginForm = (props: FormInputsProps) => {
   const { loginUser } = useContext(AuthContext)
   const [sending, setSending] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const resetInputs = () => {
+    setSending(false)
+    setEmail("")
+    setPassword("")
+  }
+  const close = () => {
+    resetInputs()
+    props.close()
+  }
   const validInputs = () => {
     return email !== "" && password !== ""
   }
@@ -171,6 +192,7 @@ const LoginForm = () => {
         id: data.user.id,
         token: data.jwt
       })
+      close()
     })
     .catch(error => {
       toast("Invalid email or password")
@@ -178,49 +200,88 @@ const LoginForm = () => {
     });
   }
   return (
-    <div className="d-flex flex-column mt-3 border rounded p-1 p-md-3">
-      <h4 className="fs-5 text-center">Login</h4>
-      <form className="d-flex flex-column" onSubmit={handleSubmit}>
-        <label className="d-flex flex-column mb-2">
-          Email address
-          <input className="form-control" type="email" value={email} onChange={handleEmail} required />
-        </label>
-        <label className="d-flex flex-column mb-2">
-          Password
-          <input className="form-control" type="password" value={password} onChange={handlePassword} required />
-        </label>
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={(!validInputs() || sending) ? true : false}
-        >{sending ? "Please wait..." : "Login"}</button>
-      </form>
-    </div>
+    <form className="d-flex flex-column" onSubmit={handleSubmit}>
+      <label className="d-flex flex-column mb-2">
+        Email address
+        <input className="form-control" type="email" value={email} onChange={handleEmail} required />
+      </label>
+      <label className="d-flex flex-column mb-2">
+        Password
+        <input className="form-control" type="password" value={password} onChange={handlePassword} required />
+      </label>
+      <button
+        type="submit"
+        className="btn btn-primary"
+        disabled={(!validInputs() || sending) ? true : false}
+      >{sending ? "Please wait..." : "Login"}</button>
+    </form>
   )
 }
-const LoginModal = () => {
-  const { isOpen, action, closeModal } = useContext(LoginContext)
-  if (!isOpen) {
-    return null
-  }
-  const close = () => {
-    closeModal()
-  }
+
+export const LoginModal = () => {
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <button
-          className={(styles.closeBtn).concat(" btn btn-secondary px-2 py-0")}
-          onClick={close}
-        >X</button>
-        {
-          (action === ACTION_LOGIN) ?
-            <LoginForm />
-          : <RegisterForm />
-        }
+    <AuthModal
+      headerLabel="Login to your account"
+      headerLabelID="loginModalLabel"
+      id="loginModal"
+      FormInputs={LoginForm}
+    />
+  )
+}
+export const SignupModal = () => {
+  return (
+    <AuthModal
+      headerLabel="Register on Tutor Universitario"
+      headerLabelID="signupModalLabel"
+      id="signupModal"
+      FormInputs={RegisterForm}
+    />
+  )
+}
+
+interface AuthModalProps {
+  headerLabel: string;
+  headerLabelID: string;
+  id: string;
+  FormInputs: (props: FormInputsProps) => JSX.Element;
+}
+const AuthModal = (props: AuthModalProps) => {
+  const { headerLabel, headerLabelID, id, FormInputs } = props
+  let closeBtn: HTMLButtonElement | null = null
+  return (
+    <div
+      className="modal fade"
+      id={id}
+      tabIndex={-1}
+      aria-labelledby={headerLabelID}
+      aria-hidden="true"
+    >
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title" id={headerLabelID}>
+              {headerLabel}
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              ref={btn => closeBtn = btn}
+            ></button>
+          </div>
+          <div className="modal-body">
+            <FormInputs close={() => closeBtn?.click()} />
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary"
+              data-bs-dismiss="modal"
+            >Cerrar</button>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
-
-export default LoginModal
