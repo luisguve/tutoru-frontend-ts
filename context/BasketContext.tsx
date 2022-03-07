@@ -102,7 +102,7 @@ export const BasketProvider = (props: IBasketProviderProps) => {
     newItem.id = `${prefix}${newItem.id}`
 
     // Avoid duplicate items
-    if (itemsIDs.some(i => `${prefix}${i.id}` === newItem.id)) {
+    if (itemsIDs.some(i => i.id === newItem.id)) {
       return
     }
 
