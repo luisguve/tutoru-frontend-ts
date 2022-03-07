@@ -1,31 +1,140 @@
-import { useContext } from "react"
+import { useContext, useState, useEffect } from "react"
 import Link from 'next/link'
 
 import { IEjercicioSummary } from "../../lib/content"
 import MyLearningContext from "../../context/MyLearningContext"
+import AuthContext from "../../context/AuthContext"
 import { STRAPI } from "../../lib/urls"
 import AddButton from '../AddButton'
 import styles from "../../styles/ListaCurso.module.scss"
 import { useEjercicioComprado } from "../../hooks/item"
+
+
+const DownloadModalBody = ({count, slug}: {count: number, slug: string}) => {
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
+  const [failed, setFailed] = useState(false)
+  const { user } = useContext(AuthContext)
+  useEffect(() => {
+    const requestDownloadUrl = async (slug: string) => {
+      if (!user) {
+        return
+      }
+      const url = `${STRAPI}/api/masterclass/ejercicios/${slug}/download`
+      const options: RequestInit = {
+        headers: { Authorization: `Bearer ${user.token}` }
+      }
+      try {
+        setFailed(false)
+        const data = await fetch(url, options)
+        const res = await data.json()
+        const { signedUrl } = res
+        if (!data.ok || !signedUrl) {
+          throw res
+        }
+        setFileUrl(signedUrl)
+      } catch(err) {
+        console.log("Failed to request download URL")
+        console.log(err)
+        setFailed(true)
+      }
+    }
+    if ((count > 0) && !fileUrl) {
+      requestDownloadUrl(slug)
+    }
+  }, [count])
+  if (!fileUrl) {
+    return (
+      <>
+        {
+          failed ?
+          <div className="alert alert-danger" role="alert">
+            La descarga falló
+          </div>
+          :
+          <p>Generando link de descarga. Espera un momento...</p>
+        }
+      </>
+    )
+  }
+  return (
+    <a className="btn btn-success" href={fileUrl} download>Descargar solución</a>
+  )
+}
 
 interface EjercicioSummaryProps {
   data: IEjercicioSummary;
   gotoSolution?: boolean;
   onPage?: boolean;
   displayDescription?: boolean;
+  hideDownloadButtton?: boolean;
   displayImage?: boolean;
 }
 
 const EjercicioSummary = (props: EjercicioSummaryProps) => {
-  const { data, gotoSolution, onPage, displayImage, displayDescription } = props
+  // This counter will start at 0, which means that the modal has not been opened
+  const [count, setCount] = useState<number>(0)
+  const {
+    data,
+    onPage,
+    gotoSolution,
+    displayImage,
+    displayDescription,
+    hideDownloadButtton
+  } = props
   const { category } = data
-  const imgUrl = `${STRAPI}${data.thumbnail[0].url}`
+  const imgPath = data.thumbnail[0].url
+  let imgUrl = `${STRAPI}${imgPath}`
+  if (imgPath.startsWith("http")) {
+    // this is an absolute URL
+    imgUrl = imgPath
+  }
 
   const solucionUrl = `/${category.slug}/${data.slug}`
-  const linkToSolution = (
-    <Link href={solucionUrl}>
-      <a className="btn btn-sm btn-success py-2 d-flex align-items-center justify-content-center">Descargar solución</a>
-    </Link>
+  const openDownloadModal = (
+    <button
+      type="button"
+      className="btn btn-sm btn-success py-2 d-flex align-items-center justify-content-center"
+      data-bs-toggle="modal"
+      data-bs-target="#downloadModal"
+      onClick={() => setCount(count+1)}
+    >
+      Descargar solución
+    </button>
+  )
+  const modal = (
+    <div
+      className="modal fade"
+      id="downloadModal"
+      tabIndex={-1}
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title" id="exampleModalLabel">
+              Descargar {data.title}
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div className="modal-body">
+            <DownloadModalBody count={count} slug={data.slug} />
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary"
+              data-bs-dismiss="modal"
+            >Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
   const linkToCategory = (
     <Link href={`/${category.slug}`}>
@@ -78,7 +187,11 @@ const EjercicioSummary = (props: EjercicioSummaryProps) => {
           }
           {
             (gotoSolution || ejercicioComprado) ?
-            linkToSolution : <AddButton item={data} />
+            !hideDownloadButtton &&  (<>
+              {openDownloadModal}{modal}
+            </>)
+            :
+            <AddButton item={data} />
           }
         </div>
       </div>
