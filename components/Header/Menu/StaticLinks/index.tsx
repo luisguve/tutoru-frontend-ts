@@ -2,19 +2,11 @@ import { useContext } from "react"
 
 import BasketButton from "../../../BasketButton";
 import AuthContext from "../../../../context/AuthContext";
-import LoginContext, {ACTION_LOGIN, ACTION_SIGNUP} from "../../../../context/LoginContext";
 
 import { Mobile, Desktop } from "./Account"
 
 const StaticLinks = () => {
-  const { user, loginUser: login } = useContext(AuthContext)
-  const { openModal, closeModal } = useContext(LoginContext)
-  const iniciar = () => {
-    openModal(ACTION_LOGIN)
-  }
-  const registrar = () => {
-    openModal(ACTION_SIGNUP)
-  }
+  const { user } = useContext(AuthContext)
   return (
     <>
       {
@@ -27,8 +19,10 @@ const StaticLinks = () => {
         <>
           <li className="nav-item d-flex align-items-center">
             <button
+              type="button"
               className="btn btn-primary mt-1 mb-2 my-lg-0"
-              onClick={iniciar}
+              data-bs-toggle="modal"
+              data-bs-target="#loginModal"
             >
               Login
             </button>
@@ -36,7 +30,9 @@ const StaticLinks = () => {
           <li className="nav-item d-flex align-items-center ms-lg-2">
             <button
               className="btn btn-secondary mt-1 mb-2 my-lg-0"
-              onClick={registrar}
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#signupModal"
             >
               Register
             </button>

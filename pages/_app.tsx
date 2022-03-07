@@ -8,10 +8,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { AuthProvider } from "../context/AuthContext"
-import { LoginProvider } from "../context/LoginContext"
 import { MyLearningProvider } from "../context/MyLearningContext"
 import { BasketProvider } from "../context/BasketContext"
-import LoginModal from "../components/LoginModal"
+import { LoginModal, SignupModal } from "../components/LoginModal"
 import Basket from "../components/Basket"
 
 import * as ga from '../lib/ga'
@@ -40,11 +39,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <AuthProvider>
       <MyLearningProvider>
         <BasketProvider>
-          <LoginProvider>
-            <Component {...pageProps} />
-            <Basket />
-            <LoginModal />
-          </LoginProvider>
+          <Component {...pageProps} />
+          <Basket />
+          <LoginModal />
+          <SignupModal />
         </BasketProvider>
       </MyLearningProvider>
     </AuthProvider>
