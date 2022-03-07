@@ -21,7 +21,14 @@ const CourseSummary = (props: CourseSummaryProps) => {
   const { category } = data
   const coursePurchased = useCoursePurchased(data.id)
   const { courseDetails, loadingDetails } = useCourseDetails(data.id)
-  const imgUrl = `${STRAPI}${data.thumbnail[0].url}`
+
+  const imgPath = data.thumbnail[0].url
+  let imgUrl = `${STRAPI}${imgPath}`
+  if (imgPath.startsWith("http")) {
+    // this is an absolute URL
+    imgUrl = imgPath
+  }
+
   const courseUrl = `/${category.slug}/course/${data.slug}`
   const linkToCourse = (
     <Link href={courseUrl.concat("/view")}>
