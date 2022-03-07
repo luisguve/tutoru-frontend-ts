@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react"
 
 import AuthContext from "../context/AuthContext"
-import BasketContext, { IItem } from "../context/BasketContext"
+import BasketContext, { IItem, COURSE_PREFIX } from "../context/BasketContext"
 
 interface AddButtonProps {
   item: IItem
@@ -24,10 +24,14 @@ const AddButton = ({ item }: AddButtonProps) => {
   // Este hook cambia el valor del estado "agregado" a false si se ha quitado
   // este articulo desde el carrito de compras.
   useEffect(() => {
-    setAdded(itemsIDs.some(({id}) => id === item.id))
+    let prefix = ""
+    if (item.kind === "course") {
+      prefix = COURSE_PREFIX
+    }
+    setAdded(itemsIDs.some(({id}) => id === `${prefix}${item.id}`))
   }, [itemsIDs])
   if (!user) {
-    return <p className="mb-0">Login to purchase this course</p>
+    return <p className="mb-0 small">Login to purchase this course</p>
   }
   return (
     added ?
