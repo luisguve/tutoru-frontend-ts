@@ -3,8 +3,6 @@ import { createContext, useEffect, useContext, useState } from "react"
 import AuthContext from "./AuthContext"
 import MyLearningContext from "./MyLearningContext"
 
-import styles from "../styles/Carrito.module.scss"
-
 export const COURSE_PREFIX = "course--"
 
 export interface IItem {
@@ -22,17 +20,11 @@ export interface IItemID {
  id: string;
 }
 export interface IBasketContext {
-  items: IItem[],
-  itemsIDs: IItemID[],
-  add: (item: IItem) => void,
-  remove: (item: IItem) => void,
-  clean: () => void,
-  step1: boolean,
-  step2: boolean,
-  setStep1: (v: boolean) => void,
-  setStep2: (v: boolean) => void,
-  classBasketContainer: string,
-  setClass: (v: string) => void,
+  items: IItem[];
+  itemsIDs: IItemID[];
+  add: (item: IItem) => void;
+  remove: (item: IItem) => void;
+  clean: () => void;
 }
 
 const defaultState: IBasketContext = {
@@ -40,13 +32,7 @@ const defaultState: IBasketContext = {
   itemsIDs: [],
   add: () => {},
   remove: () => {},
-  clean: () => {},
-  step1: false,
-  step2: false,
-  setStep1: () => {},
-  setStep2: () => {},
-  classBasketContainer: "",
-  setClass: () => {}
+  clean: () => {}
 }
 
 const BasketContext = createContext<IBasketContext>(defaultState)
@@ -86,10 +72,6 @@ export const BasketProvider = (props: IBasketProviderProps) => {
     }
     return []
   })
-
-  const [step1, setStep1] = useState(false)
-  const [step2, setStep2] = useState(false)
-  const [classBasketContainer, setClass] = useState<string>(styles.Contenedor__Carrito)
 
   const add = (item: IItem) => {
     // copy the item object
@@ -197,13 +179,7 @@ export const BasketProvider = (props: IBasketProviderProps) => {
         itemsIDs,
         add,
         remove,
-        clean,
-        step1,
-        step2,
-        setStep1,
-        setStep2,
-        classBasketContainer,
-        setClass,
+        clean
       }}
     >
       {props.children}
