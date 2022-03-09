@@ -12,40 +12,55 @@ import BasketButton from "./BasketButton"
 
 const stripePromise = loadStripe(STRIPE_PK)
 
-export default function Basket() {
+interface ItemsListProps {
+  data: IData | null;
+  editable?: boolean;
+}
+const ItemsList = (props: ItemsListProps): React.ReactElement | null => {
+  const { data, editable } = props
   const { remove } = useContext(BasketContext)
+
+  if (!data || !data.items.length) {
+    return null
+  }
+  const btnRemove = (item: IItem) => {
+    return (
+      <button
+        className="btn btn-outline-danger py-0"
+        onClick={() => remove(item)}
+      >Remove</button>
+    )
+  }
+  const list = data.items.map(item => {
+    // if the item is a ejercicio, display it's category
+    const label = item.kind === "course" ? item.title : `${item.category.title} - ${item.title}`
+    return (
+      <tr key={item.slug}>
+        <th scope="row">${item.price}</th>
+        <td className="small mb-0">{label}</td>
+        {editable && <td>{btnRemove(item)}</td>}
+      </tr>
+    )
+  })
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          <th scope="col">Price</th>
+          <th scope="col">Name</th>
+          {editable && <th scope="col">Edit</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {list}
+      </tbody>
+    </table>
+  )
+}
+
+export default function Basket() {
   const router = useRouter()
   const { data } = useData()
-
-  const renderList = (editable: boolean) => {
-    if (!data) {
-      return null
-    }
-    const btnRemove = (item: IItem) => {
-      return (
-        <button
-          className="btn btn-outline-danger py-0"
-          onClick={() => remove(item)}
-        >Remove</button>
-      )
-    }
-    return data.items.map(item => {
-      // if the item is a ejercicio, display it's category
-      const label = item.kind === "course" ? item.title : `${item.category.title} - ${item.title}`
-      return (
-        <div
-          className="w-100 d-flex justify-content-between align-items-center mb-1"
-          key={item.slug}
-        >
-          <span>${item.price}</span>
-          <span className="mx-2 mx-lg-4">{label}</span>
-          {
-            editable && <span>{btnRemove(item)}</span>
-          }
-        </div>
-      )
-    })
-  }
 
   // No mostrar el icono si estamos en la pagina de reproduccion de un curso
   if (router.asPath.endsWith("/view")) {
@@ -59,16 +74,10 @@ export default function Basket() {
       <Step0 />
       {/* Ventana de confirmacion: */}
       {/* En esta ventana se pueden quitar los articulos */}
-      <Confirmation
-        data={data}
-        list={renderList(true)}
-      />
+      <Confirmation data={data} />
       {/* Ventana de checkout: */}
       {/* Se selecciona el metodo de pago y se redirige al checkout */}
-      <Checkout
-        data={data}
-        list={renderList(false)}
-      />
+      <Checkout data={data} />
       <span className="d-none d-md-inline"><BasketButton /></span>
     </>
   )
@@ -112,14 +121,13 @@ const Step0 = () => {
 
 interface BasketTabProps {
  data: IData | null;
- list: React.ReactNode[] | null;
 }
 // Paso 1: ventana de confirmacion
 // En esta ventana se pueden quitar los articulos
 const Confirmation = (props: BasketTabProps) => {
   const { user } = useContext(AuthContext)
   const { clean } = useContext(BasketContext)
-  const { data, list } = props
+  const { data } = props
   const noItems = !user || !data || !data.items.length
   const modalFooterClass = noItems ? "" : " d-flex justify-content-between"
   return (
@@ -148,7 +156,7 @@ const Confirmation = (props: BasketTabProps) => {
               :
               data && data.items.length ?
                 <>
-                  {list}
+                  <ItemsList data={data} editable />
                   <h4 className="text-center mt-4">Total: ${data.total}</h4>
                 </>
               :
@@ -191,7 +199,7 @@ const Confirmation = (props: BasketTabProps) => {
 // En esta ventana no se pueden quitar los articulos
 // El usuario selecciona el metodo de pago y se redirige al checkout
 const Checkout = (props: BasketTabProps) => {
-  const { data, list } = props
+  const { data } = props
 
   const { user } = useContext(AuthContext)
   const { itemsIDs, clean: cleanBasket } = useContext(BasketContext)
@@ -199,13 +207,13 @@ const Checkout = (props: BasketTabProps) => {
   const [checkedCC, setCheckedCC] = useState(true)
   const [method, setPaymentMethod] = useState<string>("CC")
 
-  const [disabled, setDisabled] = useState("")
+  const [sending, setSending] = useState(false)
 
   const pay = async () => {
     if (!user) {
       return
     }
-    setDisabled("disabled")
+    setSending(true)
     try {
       const coursesIDs: string[] = []
       const ejerciciosIDs: string[] = []
@@ -255,7 +263,7 @@ const Checkout = (props: BasketTabProps) => {
       console.log(err)
       toast("Something went wrong. View console")
     } finally {
-      setDisabled("")
+      setSending(false)
     }
   }
   return (
@@ -264,18 +272,25 @@ const Checkout = (props: BasketTabProps) => {
       id="cartModalStep2"
       aria-hidden="true"
       aria-labelledby="cartModalLabel2"
+      data-bs-backdrop={sending ? "static" : "true"}
+      data-bs-keyboard={sending ? "false" : "true"}
       tabIndex={-1}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="cartModalLabel2">Step 2: choose payment method</h5>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              className={"btn-close".concat(sending ? " disabled" : "")}
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div className="modal-body">
             {
               data && data.items.length ?
               <>
-                {list}
+                <ItemsList data={data} />
                 <h4>Total: ${data.total}</h4>
                 <div className="d-flex flex-column my-3">
                   <div className="d-flex flex-column align-items-center mb-2">
@@ -293,9 +308,9 @@ const Checkout = (props: BasketTabProps) => {
                   </div>
                   {
                     <button
-                      className={disabled.concat(" btn btn-success my-2")}
+                      className={"btn btn-success my-2".concat(sending ? " disabled" : "")}
                       onClick={pay}
-                    >{disabled ? "Creating order..." : "Complete purchase"}</button>
+                    >{sending ? "Creating order..." : "Complete purchase"}</button>
                   }
                 </div>
               </>
@@ -305,7 +320,7 @@ const Checkout = (props: BasketTabProps) => {
           </div>
           <div className="modal-footer">
             <button
-              className="btn btn-primary"
+              className={"btn btn-primary".concat(sending ? " disabled" : "")}
               data-bs-target="#cartModal"
               data-bs-toggle="modal"
               data-bs-dismiss="modal"
