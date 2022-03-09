@@ -213,24 +213,24 @@ const Checkout = (props: BasketTabProps) => {
     if (!user) {
       return
     }
+    const coursesIDs: string[] = []
+    const ejerciciosIDs: string[] = []
+    itemsIDs.map(({id}) => {
+      if (id.startsWith(COURSE_PREFIX)) {
+        coursesIDs.push(id.replace(COURSE_PREFIX, ""))
+      } else {
+        ejerciciosIDs.push(id)
+      }
+    })
     setSending(true)
     try {
-      const coursesIDs: string[] = []
-      const ejerciciosIDs: string[] = []
-      itemsIDs.map(({id}) => {
-        if (id.startsWith(COURSE_PREFIX)) {
-          coursesIDs.push(id.replace(COURSE_PREFIX, ""))
-        } else {
-          ejerciciosIDs.push(id)
-        }
-      })
       const stripe = await stripePromise
       if (!stripe) {
         throw "Null Stripe"
       }
 
       const url = `${STRAPI}/api/masterclass/orders`
-      const orderOptions = {
+      const options = {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${user.token}`,
@@ -243,22 +243,21 @@ const Checkout = (props: BasketTabProps) => {
       }
 
       toast("Creando orden de compra")
-      const res = await fetch(url, orderOptions)
+      const res = await fetch(url, options)
       const data = await res.json()
       if (!res.ok) {
         throw data
       }
       const { id } = data
-      if (id) {
-        toast("Redireccionando a stripe")
-        cleanBasket()
-        cleanSession()
-        await stripe.redirectToCheckout({
-          sessionId: id
-        })
-      } else {
+      if (!id) {
         throw "No id"
       }
+      toast("Redireccionando a stripe")
+      cleanBasket()
+      cleanSession()
+      await stripe.redirectToCheckout({
+        sessionId: id
+      })
     } catch (err) {
       console.log(err)
       toast("Something went wrong. View console")
