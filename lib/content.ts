@@ -199,7 +199,7 @@ export function buildIndex({parentUrl, root}: ITree) {
         page: [...page, "course", c.slug, "view"]
       }
     }
-    result.push(coursePage)
+    result.push(coursePage, courseRepPage)
   })
   root.ejercicios.map(e => {
     const ejercicioPage: ITreeItem = {
