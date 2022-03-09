@@ -89,9 +89,9 @@ const CourseSummary = (props: CourseSummaryProps) => {
             )
           }
           {
-            !gotoCourse ?
-              coursePurchased ? linkToCourse : <AddButton item={data} />
-            : linkToCourse
+            (gotoCourse || coursePurchased) ?
+              linkToCourse
+            : <AddButton item={data} />
           }
         </div>
       </div>
