@@ -53,8 +53,8 @@ const ClassifiedItems = (props: ClassifiedItemsProps) => {
     const muestras = ejerciciosClasificados[categoria]
     const grupoEjercicios = muestras.map(e => {
       return (
-        <div className="mb-4">
-          <EjercicioSummary key={e.slug} data={e} gotoSolution displayImage />
+        <div className="mb-4" key={e.slug}>
+          <EjercicioSummary data={e} gotoSolution displayImage />
         </div>
       )
     })
@@ -66,8 +66,8 @@ const ClassifiedItems = (props: ClassifiedItemsProps) => {
     if (cursosClasificados[categoria]) {
       grupoCursos = cursosClasificados[categoria].map(c => {
         return (
-          <div className="mb-4">
-            <CourseSummary data={c} key={c.slug} gotoCourse displayImage hideDescription />
+          <div className="mb-4" key={c.slug}>
+            <CourseSummary data={c} gotoCourse displayImage hideDescription />
           </div>
         )
       })
@@ -92,8 +92,8 @@ const ClassifiedItems = (props: ClassifiedItemsProps) => {
   for (const categoria in cursosClasificados) {
     const grupoCursos = cursosClasificados[categoria].map(c => {
       return (
-        <div className="mb-4">
-          <CourseSummary data={c} key={c.slug} gotoCourse displayImage hideDescription />
+        <div className="mb-4" key={c.slug}>
+          <CourseSummary data={c} gotoCourse displayImage hideDescription />
         </div>
       )
     })
