@@ -7,12 +7,14 @@ interface IMyLearningContext {
   coursesIDs: ICourse[] | null;
   ejerciciosIDs: IEjercicio[] | null;
   loadingItems: boolean;
+  refresh: () => void;
 }
 
 const defaultState: IMyLearningContext = {
   coursesIDs: null,
   ejerciciosIDs: null,
-  loadingItems: false
+  loadingItems: false,
+  refresh: () => {}
 }
 
 const MyLearningContext = createContext<IMyLearningContext>(defaultState)
@@ -39,21 +41,11 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
   const [items, setItems] = useState<IMyLearning | null>(null)
 
   const { user } = useContext(AuthContext)
-  // Fetch the IDs of the courses that the user has purchased (if logged in)
-  const getItems = async () => {
+
+  const refresh = async () => {
     if (!user) {
       setItems(null)
       return
-    }
-    const { data } = getSession()
-    if (data) {
-      setItems(data)
-      if (!data.courses || !data.courses.length) {
-        console.log("No courses purchased (from local storage)")
-      }
-      if (!data.ejercicios || !data.ejercicios.length) {
-        console.log("No ejercicios purchased (from local storage)")
-      }
     }
     // Get the IDs of items purchased
     try {
@@ -87,19 +79,39 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
     } catch (err) {
       console.log("Could not request data")
       console.log(err)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
+  }
+  // Fetch the IDs of the courses that the user has purchased (if logged in)
+  const loadFromStorage = () => {
+    if (!user) {
+      setItems(null)
+      return
+    }
+    const { data } = getSession()
+    if (data) {
+      setItems(data)
+      if (!data.courses || !data.courses.length) {
+        console.log("No courses purchased (from local storage)")
+      }
+      if (!data.ejercicios || !data.ejercicios.length) {
+        console.log("No ejercicios purchased (from local storage)")
+      }
+    }
   }
   useEffect(() => {
     // Intenta obtener los IDs de los ejercicios del local storage.
+    loadFromStorage()
     // Igualmente pide de todas maneras los IDs de articulos comprados.
-    getItems()
+    refresh()
   }, [user])
   return (
     <MyLearningContext.Provider value={{
       coursesIDs: items ? items.courses : null,
       ejerciciosIDs: items ? items.ejercicios : null,
-      loadingItems
+      loadingItems,
+      refresh
     }}>
       {props.children}
     </MyLearningContext.Provider>
