@@ -2,28 +2,31 @@ import { useState, useEffect, useContext } from "react"
 import { toast } from "react-toastify"
 
 import AuthContext from "../context/AuthContext"
+import MyLearningContext from "../context/MyLearningContext"
 import { cleanSession } from "../context/MyLearningContext"
 import { STRAPI } from "../lib/urls"
+import { IEjercicioSummary, ICourseSummary } from "../lib/content"
 
 export interface IOrder {
-  createdAt: string,
-  updatedAt: string,
-  id: number,
-  total: number,
-  confirmed: boolean
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  total: number;
+  confirmed: boolean;
+  courses: ICourseSummary[];
+  ejercicios: IEjercicioSummary[];
 }
-
 /**
 * Este hook verifica si el checkout_session es valido y por lo tanto la orden de compra
 * se completó exitosamente.
-* De ser asi, limpia los ejercicios IDS del localStorage para que en el proximo reload
-* se carguen nuevamente.
+* De ser asi, limpia los ejercicios IDS del localStorage y refresca la informacion.
 */
 export const useOrder = (checkout_session: string  | string[] | undefined) => {
   const [order, setOrder] = useState<IOrder | null>(null)
   const [loadingOrder, setLoading] = useState(true)
 
   const { user } = useContext(AuthContext)
+  const { refresh } = useContext(MyLearningContext)
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -48,6 +51,7 @@ export const useOrder = (checkout_session: string  | string[] | undefined) => {
             throw data
           }
           toast("Payment confirmed!")
+          refresh()
           cleanSession()
           setOrder(data.order)
         } catch (err) {
