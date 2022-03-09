@@ -6,6 +6,8 @@ import { useContext } from "react"
 
 import AuthContext from "../context/AuthContext"
 import Layout from '../components/Layout'
+import EjercicioSummary from "../components/Category/EjercicioSummary"
+import CourseSummary from "../components/Category/CourseSummary"
 import { useOrder } from "../hooks/order"
 import metadata, { INavigationItem, ISiteInfo } from "../lib/metadata"
 
@@ -42,6 +44,21 @@ const Payment = (props: StaticProps) => {
   const router = useRouter()
   const { checkout_session } = router.query
   const { order, loadingOrder } = useOrder(checkout_session)
+
+  let coursesJSX: React.ReactNode[] | null = null;
+  let ejerciciosJSX: React.ReactNode[] | null = null;
+  if (order) {
+    coursesJSX = order.courses.map(c => (
+      <div className="mb-4" key={c.slug}>
+        <CourseSummary data={c} displayImage gotoCourse />
+      </div>
+    ))
+    ejerciciosJSX = order.ejercicios.map(e => (
+      <div className="mb-4" key={e.slug}>
+        <EjercicioSummary data={e} displayImage gotoSolution />
+      </div>
+    ))
+  }
 
   return (
     <Layout
@@ -90,6 +107,9 @@ const Payment = (props: StaticProps) => {
                 </tr>
               </tbody>
             </table>
+            <h4 className="mt-5 text-center fs-2">New learning</h4>
+            {coursesJSX}
+            {ejerciciosJSX}
             <Link href="/my-learning"><a>Ready to start learning?</a></Link>
           </>
         }
