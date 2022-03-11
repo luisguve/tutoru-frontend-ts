@@ -32,7 +32,7 @@ const ItemsList = (props: ItemsListProps): React.ReactElement | null => {
   const btnRemove = (item: IItem) => {
     return (
       <FontAwesomeIcon
-        className="btn p-0 text-danger" icon={faTrashCan} onClick={() => remove(item)}
+        className="btn text-danger p-2" icon={faTrashCan} onClick={() => remove(item)}
       />
     )
   }
@@ -43,12 +43,12 @@ const ItemsList = (props: ItemsListProps): React.ReactElement | null => {
       <tr key={item.slug}>
         <th scope="row">${item.price}</th>
         <td className="small mb-0">{label}</td>
-        {editable && <td>{btnRemove(item)}</td>}
+        {editable && <td className="py-0">{btnRemove(item)}</td>}
       </tr>
     )
   })
   return (
-    <table className="table">
+    <table className="table align-middle">
       <thead>
         <tr>
           <th scope="col">Price</th>
