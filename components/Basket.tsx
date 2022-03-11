@@ -10,6 +10,10 @@ import { cleanSession } from "../context/MyLearningContext"
 import styles from "../styles/Carrito.module.scss"
 import { STRIPE_PK, STRAPI } from "../lib/urls"
 import BasketButton from "./BasketButton"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCreditCard as solidCreditCard } from '@fortawesome/free-solid-svg-icons'
+import { faCreditCard as regularCreditCard } from '@fortawesome/free-regular-svg-icons'
+import { faPaypal } from '@fortawesome/free-brands-svg-icons'
 
 const stripePromise = loadStripe(STRIPE_PK)
 
@@ -155,20 +159,40 @@ const Confirmation = (props: BasketTabProps) => {
 // El usuario selecciona el metodo de pago y se redirige al checkout
 const Checkout = (props: BasketTabProps) => {
   const { hide, data, list, back } = props
-
   const { user } = useContext(AuthContext)
   const { itemsIDs, clean: cleanBasket } = useContext(BasketContext)
-  // Opcion de pago por defecto: tarjeta de credito
-  const [checkedCC, setCheckedCC] = useState(true)
-  const [method, setPaymentMethod] = useState<string>("CC")
+  const router = useRouter()
 
-  const [disabled, setDisabled] = useState("")
+  const [sending, setSending] = useState(false)
+
+  const [ccSelected, setCcSelected] = useState(true)
+  const [paypalSelected, setPaypalSelected] = useState(false)
+
+  const selectMethod = (method: "cc" | "paypal") => {
+    if (sending) {
+      return
+    }
+    switch(method) {
+      case "cc":
+      if (paypalSelected) {
+        setPaypalSelected(false)
+        setCcSelected(true)
+      }
+      break;
+      case "paypal":
+      if (ccSelected) {
+        setCcSelected(false)
+        setPaypalSelected(true)
+      }
+      break;
+    }
+  }
 
   const pay = async () => {
     if (!user) {
       return
     }
-    setDisabled("disabled")
+    setSending(true)
     try {
       const IDs: number[] = itemsIDs.map(({ id }) => id)
       const stripe = await stripePromise
@@ -184,7 +208,8 @@ const Checkout = (props: BasketTabProps) => {
           "Content-type": "application/json"
         },
         body: JSON.stringify({
-          courses: IDs
+          courses: IDs,
+          method: ccSelected? "cc" : "paypal"
         })
       }
 
@@ -194,22 +219,35 @@ const Checkout = (props: BasketTabProps) => {
       if (!res.ok) {
         throw data
       }
-      const { id } = data
-      if (id) {
+      const result = data
+      if (ccSelected) {
+        const { id } = result
+        if (!id) {
+          throw "No id"
+        }
         toast("Redireccionando a stripe")
-        cleanBasket()
-        cleanSession()
         await stripe.redirectToCheckout({
           sessionId: id
         })
       } else {
-        throw "No id"
+        // Paying with paypal
+        const { links } = result
+        if (!links) {
+          throw "No links"
+        }
+        const link = links.find((l: any) => l.rel === "approve")
+        if (!link) {
+          throw "No approve link"
+        }
+        toast("Redireccionando a PayPal")
+        router.push(link.href)
       }
+      cleanBasket()
+      cleanSession()
     } catch (err) {
       console.log(err)
       toast("Something went wrong. View console")
-    } finally {
-      setDisabled("")
+      setSending(false)
     }
   }
   return (
@@ -220,21 +258,40 @@ const Checkout = (props: BasketTabProps) => {
           {list}
           <h4>Total: ${data.total}</h4>
           <p>Choose payment method</p>
-          <label>
-            <input
-              type="radio"
-              name="method"
-              value="CC"
-              checked={checkedCC ? true : undefined}
-              onChange={e => setPaymentMethod(e.target.value)}
-            />
-            Credit card
-          </label>
+
+          <div
+            className={
+              "d-flex justify-content-between ".concat(sending ? styles["sending"] : "")
+            }
+          >
+            <div
+              className={styles["type"].concat(ccSelected ? " " + styles["selected"] : "")}
+              onClick={() => selectMethod("cc")}
+            >
+              <div className={styles["logo"]}>
+                <FontAwesomeIcon icon={ccSelected ? solidCreditCard : regularCreditCard} />
+              </div>
+              <div>
+                <p>Pay with Credit Card</p>
+              </div>
+            </div>
+            <div
+              className={styles["type"].concat(paypalSelected ? " " + styles["selected"] : "")}
+              onClick={() => selectMethod("paypal")}
+            >
+              <div className={styles["logo"]}>
+                <FontAwesomeIcon icon={faPaypal} />
+              </div>
+              <div>
+                <p>Pay with PayPal</p>
+              </div>
+            </div>
+          </div>
           {
             <button
-              className={disabled.concat(" btn btn-primary w-75 my-2")}
+              className={"btn btn-primary w-75 my-2".concat(sending ? " disabled" : "")}
               onClick={pay}
-            >{disabled ? "Creating order..." : "Complete purchase"}</button>
+            >{sending ? "Creating order..." : "Complete purchase"}</button>
           }
         </>
         :
