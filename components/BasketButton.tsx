@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
 
 import styles from "../styles/Carrito.module.scss"
 import { useData } from "../hooks/basket"
@@ -11,8 +13,9 @@ const BasketButton = () => {
       data-bs-toggle="modal"
       data-bs-target="#cartModal"
     >
-      Cart {
-        (data && data.items.length) ? `(${data.items.length})`: null
+      <FontAwesomeIcon icon={faCartShopping} />
+      {
+        (data && data.items.length > 0) ? ` (${data.items.length})`: null
       }
     </button>
   )

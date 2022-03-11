@@ -10,8 +10,8 @@ import { cleanSession } from "../context/MyLearningContext"
 import { STRIPE_PK, STRAPI } from "../lib/urls"
 import BasketButton from "./BasketButton"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCreditCard as solidCreditCard } from '@fortawesome/free-solid-svg-icons'
-import { faCreditCard as regularCreditCard } from '@fortawesome/free-regular-svg-icons'
+import { faCreditCard } from '@fortawesome/free-regular-svg-icons'
+import { faCheck, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faPaypal } from '@fortawesome/free-brands-svg-icons'
 
 import styles from "../styles/Carrito.module.scss"
@@ -31,10 +31,9 @@ const ItemsList = (props: ItemsListProps): React.ReactElement | null => {
   }
   const btnRemove = (item: IItem) => {
     return (
-      <button
-        className="btn btn-outline-danger py-0"
-        onClick={() => remove(item)}
-      >Remove</button>
+      <FontAwesomeIcon
+        className="btn p-0 text-danger" icon={faTrashCan} onClick={() => remove(item)}
+      />
     )
   }
   const list = data.items.map(item => {
@@ -333,7 +332,7 @@ const Checkout = (props: BasketTabProps) => {
                 <h4>Total: ${data.total}</h4>
                 <div className="d-flex flex-column my-3">
                   <div className="d-flex flex-column align-items-center mb-2">
-                    <p className="mb-1">Choose payment method</p>
+                    <p className="fw-bold fs-6 mb-4">Choose payment method</p>
                     <div
                       className={
                         "d-flex justify-content-between ".concat(sending ? styles["sending"] : "")
@@ -344,15 +343,22 @@ const Checkout = (props: BasketTabProps) => {
                         onClick={() => selectMethod("cc")}
                       >
                         <div className={styles["logo"]}>
-                          <FontAwesomeIcon icon={ccSelected ? solidCreditCard : regularCreditCard} />
+                          <FontAwesomeIcon icon={faCreditCard} />
                         </div>
                         <div>
                           <p>Pay with Credit Card</p>
                         </div>
+                        {
+                          ccSelected && (
+                            <div className={styles["check"]}>
+                              <FontAwesomeIcon icon={faCheck} />
+                            </div>
+                          )
+                        }
                       </div>
                       <div
                         className={
-                          styles["type"].concat(paypalSelected ? " " + styles["selected"] : "")
+                          styles["type"].concat(paypalSelected ? " "+styles["selected"] : "")
                         }
                         onClick={() => selectMethod("paypal")}
                       >
@@ -362,6 +368,13 @@ const Checkout = (props: BasketTabProps) => {
                         <div>
                           <p>Pay with PayPal</p>
                         </div>
+                        {
+                          paypalSelected && (
+                            <div className={styles["check"]}>
+                              <FontAwesomeIcon icon={faCheck} />
+                            </div>
+                          )
+                        }
                       </div>
                     </div>
                   </div>
