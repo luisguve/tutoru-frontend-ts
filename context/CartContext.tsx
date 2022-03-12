@@ -102,12 +102,16 @@ export const CartProvider = (props: ICartProviderProps) => {
       itemID = COURSE_PREFIX.concat(itemID)
     }
 
-    const newItems = items.filter(i => i.id !== itemID)
-    setItems(newItems)
-    const newIDs = itemsIDs.filter(i => i.id !== itemID)
-    setItemsIDs(newIDs)
-
-    saveSession(newItems, newIDs)
+    setItems(items => {
+      const newItems = items.filter(i => i.id !== itemID)
+      saveSession(newItems, null)
+      return newItems
+    })
+    setItemsIDs(itemsIDs => {
+      const newItemsIDs = itemsIDs.filter(i => i.id !== itemID)
+      saveSession(null, newItemsIDs)
+      return newItemsIDs
+    })
   }
 
   const clean = () => {
@@ -142,12 +146,12 @@ export const CartProvider = (props: ICartProviderProps) => {
           return
         }
         const userPurchasedThis = coursesPurchased.some(({ course }) => {
-          // Remove the prefix for courses from the ID
           const idToCompare = itemID.replace(COURSE_PREFIX, "")
           return course.id.toString() === idToCompare
         })
 
         if (userPurchasedThis) {
+          // console.log(`User purchased ${itemID}`)
           const item = items.find(i => i.id === itemID)
           if (item) {
             remove(item)
@@ -208,22 +212,28 @@ const getSession = (): ISession => {
   }
   return {}
 }
-const saveSession = (items: IItem[], itemsIDs: IItemID[]) => {
+
+const saveSession = (items: IItem[] | null, itemsIDs: IItemID[] | null) => {
   if (typeof(Storage) !== undefined) {
     const dataStr = localStorage.getItem("data")
-    let data = {}
+    let data: any = {}
     if (dataStr) {
       data = JSON.parse(dataStr)
     }
+    const newDataCart: {items: IItem[] | null, itemsIDs: IItemID[] | null} = data.cart
+    if (items !== null) {
+      newDataCart.items = items
+    }
+    if (itemsIDs !== null) {
+      newDataCart.itemsIDs = itemsIDs
+    }
     localStorage.setItem("data", JSON.stringify({
       ...data,
-      cart: {
-        items,
-        itemsIDs
-      }
+      cart: newDataCart
     }))
   }
 }
+
 const cleanSession = () => {
   if (typeof(Storage) !== undefined) {
     const dataStr = localStorage.getItem("data")
