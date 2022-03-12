@@ -32,7 +32,7 @@ const ItemsList = (props: ItemsListProps): React.ReactElement | null => {
   const btnRemove = (item: IItem) => {
     return (
       <FontAwesomeIcon
-        className="btn text-danger p-2" icon={faTrashCan} onClick={() => remove(item)}
+        className="btn text-danger" icon={faTrashCan} onClick={() => remove(item)}
       />
     )
   }
