@@ -73,8 +73,8 @@ const Payment = (props: PaymentProps) => {
               :
               order ? <h1>Successful purchase!</h1> : (
                 <div>
-                  <h1>The payment could not be confirmed. Please contact support</h1>
-                  <p>Checkout ID: {checkout_session}</p>
+                  <h1 className="mb-5">The payment could not be confirmed. Please contact support</h1>
+                  <p>Checkout ID: <span className="fw-bold">{checkout_session}</span></p>
                 </div>
               )
           }
