@@ -13,10 +13,10 @@ const BasketButton = () => {
       data-bs-toggle="modal"
       data-bs-target="#cartModal"
     >
-      <FontAwesomeIcon icon={faCartShopping} />
-      {
-        (data && data.items.length > 0) ? ` (${data.items.length})`: null
-      }
+      <span>
+        <FontAwesomeIcon icon={faCartShopping} size="sm" />
+        <span> ({data ? data.items.length : 0})</span>
+      </span>
     </button>
   )
 }
