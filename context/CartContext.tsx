@@ -19,7 +19,7 @@ export interface IItem {
 export interface IItemID {
  id: string;
 }
-export interface IBasketContext {
+export interface ICartContext {
   items: IItem[];
   itemsIDs: IItemID[];
   add: (item: IItem) => void;
@@ -27,7 +27,7 @@ export interface IBasketContext {
   clean: () => void;
 }
 
-const defaultState: IBasketContext = {
+const defaultState: ICartContext = {
   items: [],
   itemsIDs: [],
   add: () => {},
@@ -35,13 +35,13 @@ const defaultState: IBasketContext = {
   clean: () => {}
 }
 
-const BasketContext = createContext<IBasketContext>(defaultState)
+const CartContext = createContext<ICartContext>(defaultState)
 
-export interface IBasketProviderProps {
+export interface ICartProviderProps {
   children: React.ReactNode
 }
 
-export const BasketProvider = (props: IBasketProviderProps) => {
+export const CartProvider = (props: ICartProviderProps) => {
   const { user } = useContext(AuthContext)
   const {
     coursesIDs: coursesPurchased,
@@ -135,7 +135,7 @@ export const BasketProvider = (props: IBasketProviderProps) => {
   }, [user])
 
   useEffect(() => {
-    // Remove the items that the user has purchased from the basket
+    // Remove the items that the user has purchased from the cart
     if (coursesPurchased) {
       itemsIDs.map(({id: itemID}) => {
         if (!itemID.startsWith(COURSE_PREFIX)) {
@@ -173,7 +173,7 @@ export const BasketProvider = (props: IBasketProviderProps) => {
   }, [coursesPurchased, ejerciciosPurchased])
 
   return (
-    <BasketContext.Provider
+    <CartContext.Provider
       value={{
         items,
         itemsIDs,
@@ -183,11 +183,11 @@ export const BasketProvider = (props: IBasketProviderProps) => {
       }}
     >
       {props.children}
-    </BasketContext.Provider>
+    </CartContext.Provider>
   )
 }
 
-export default BasketContext
+export default CartContext
 
 interface ISession {
   data?: {
@@ -202,7 +202,7 @@ const getSession = (): ISession => {
     if (dataStr) {
       const data = JSON.parse(dataStr)
       return {
-        data: data["basket"]
+        data: data["cart"]
       }
     }
   }
@@ -217,7 +217,7 @@ const saveSession = (items: IItem[], itemsIDs: IItemID[]) => {
     }
     localStorage.setItem("data", JSON.stringify({
       ...data,
-      basket: {
+      cart: {
         items,
         itemsIDs
       }
@@ -229,7 +229,7 @@ const cleanSession = () => {
     const dataStr = localStorage.getItem("data")
     if (dataStr) {
       const data = JSON.parse(dataStr)
-      delete data["basket"]
+      delete data["cart"]
       localStorage.setItem("data", JSON.stringify(data))
     }
   }

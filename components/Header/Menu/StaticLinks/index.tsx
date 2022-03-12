@@ -1,6 +1,6 @@
 import { useContext } from "react"
 
-import BasketButton from "../../../BasketButton";
+import CartButton from "../../../Cart/CartButton";
 import AuthContext from "../../../../context/AuthContext";
 
 import { Mobile, Desktop } from "./Account"
@@ -40,7 +40,7 @@ const StaticLinks = () => {
         </>
       }
       <li className="nav-item d-md-none">
-        <BasketButton />
+        <CartButton />
       </li>
     </>
   )

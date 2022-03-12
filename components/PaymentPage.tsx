@@ -36,7 +36,7 @@ const Payment = (props: PaymentProps) => {
   } else {
     checkout_session = router.query.checkout_session
   }
-  const { order, loadingOrder } = useOrder({checkout_session, method})
+  const { order, loadingOrder } = useOrder(checkout_session)
 
   let coursesJSX: React.ReactNode[] | null = null;
   let ejerciciosJSX: React.ReactNode[] | null = null;

@@ -5,7 +5,7 @@ import { IEjercicioSummary } from "../../lib/content"
 import MyLearningContext from "../../context/MyLearningContext"
 import AuthContext from "../../context/AuthContext"
 import { STRAPI } from "../../lib/urls"
-import AddButton from '../AddButton'
+import AddToCartButton from '../Cart/AddToCartButton'
 import styles from "../../styles/ListaCurso.module.scss"
 import { useEjercicioComprado } from "../../hooks/item"
 
@@ -191,7 +191,7 @@ const EjercicioSummary = (props: EjercicioSummaryProps) => {
               {openDownloadModal}{modal}
             </>)
             :
-            <AddButton item={data} />
+            <AddToCartButton item={data} />
           }
         </div>
       </div>

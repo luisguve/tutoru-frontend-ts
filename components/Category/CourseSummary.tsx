@@ -5,7 +5,7 @@ import formatDuration from "format-duration"
 
 import { ICourseSummary } from "../../lib/content"
 import { STRAPI } from "../../lib/urls"
-import AddButton from '../AddButton'
+import AddToCartButton from '../Cart/AddToCartButton'
 import styles from "../../styles/ListaCurso.module.scss"
 import { useCoursePurchased, useCourseDetails } from "../../hooks/item"
 
@@ -91,7 +91,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
           {
             (gotoCourse || coursePurchased) ?
               linkToCourse
-            : <AddButton item={data} />
+            : <AddToCartButton item={data} />
           }
         </div>
       </div>

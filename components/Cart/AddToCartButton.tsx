@@ -1,15 +1,15 @@
 import { useContext, useState, useEffect } from "react"
 
-import AuthContext from "../context/AuthContext"
-import BasketContext, { IItem, COURSE_PREFIX } from "../context/BasketContext"
+import AuthContext from "../../context/AuthContext"
+import CartContext, { IItem, COURSE_PREFIX } from "../../context/CartContext"
 
 interface AddButtonProps {
   item: IItem
 }
 
-const AddButton = ({ item }: AddButtonProps) => {
+const AddToCartButton = ({ item }: AddButtonProps) => {
   const { user } = useContext(AuthContext)
-  const { itemsIDs, add, remove } = useContext(BasketContext)
+  const { itemsIDs, add, remove } = useContext(CartContext)
 
   const [added, setAdded] = useState<boolean>(itemsIDs.some(({id}) => id === item.id))
 
@@ -47,4 +47,4 @@ const AddButton = ({ item }: AddButtonProps) => {
   )
 }
 
-export default AddButton
+export default AddToCartButton

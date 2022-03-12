@@ -12,9 +12,9 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { AuthProvider } from "../context/AuthContext"
 import { MyLearningProvider } from "../context/MyLearningContext"
-import { BasketProvider } from "../context/BasketContext"
+import { CartProvider } from "../context/CartContext"
 import { LoginModal, SignupModal } from "../components/LoginModal"
-import Basket from "../components/Basket"
+import Cart from "../components/Cart"
 
 import * as ga from '../lib/ga'
 
@@ -43,12 +43,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <MyLearningProvider>
-        <BasketProvider>
+        <CartProvider>
           <Component {...pageProps} />
-          <Basket />
+          <Cart />
           <LoginModal />
           <SignupModal />
-        </BasketProvider>
+        </CartProvider>
       </MyLearningProvider>
     </AuthProvider>
   )

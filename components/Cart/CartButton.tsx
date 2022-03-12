@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
 
-import styles from "../styles/Carrito.module.scss"
-import { useData } from "../hooks/basket"
+import styles from "../../styles/Carrito.module.scss"
+import { useData } from "../../hooks/cart"
 
-const BasketButton = () => {
+const CartButton = () => {
   const { data } = useData()
   return (
     <button
@@ -21,4 +21,4 @@ const BasketButton = () => {
   )
 }
 
-export default BasketButton
+export default CartButton

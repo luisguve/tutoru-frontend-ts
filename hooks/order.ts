@@ -7,11 +7,6 @@ import { cleanSession } from "../context/MyLearningContext"
 import { STRAPI } from "../lib/urls"
 import { IEjercicioSummary, ICourseSummary } from "../lib/content"
 
-interface useOrderProps {
-  checkout_session: string  | string[] | undefined;
-  method?: "paypal" | "cc";
-}
-
 export interface IOrder {
   createdAt: string;
   updatedAt: string;
@@ -26,8 +21,7 @@ export interface IOrder {
 * se completó exitosamente.
 * De ser asi, limpia los ejercicios IDS del localStorage y refresca la informacion.
 */
-export const useOrder = (props: useOrderProps) => {
-  const { checkout_session, method } = props
+export const useOrder = (checkout_session: string  | string[] | undefined) => {
   const [order, setOrder] = useState<IOrder | null>(null)
   const [loadingOrder, setLoading] = useState(true)
 
@@ -40,10 +34,7 @@ export const useOrder = (props: useOrderProps) => {
         try {
           setLoading(true)
           toast("Confirming payment")
-          let orderUrl = `${STRAPI}/api/masterclass/orders/confirm`
-          if (method === "paypal") {
-            orderUrl = `${STRAPI}/api/masterclass/orders/paypal`
-          }
+          const orderUrl = `${STRAPI}/api/masterclass/orders/confirm`
           const options = {
             method: "PUT",
             headers: {
