@@ -32,7 +32,7 @@
     "remark-parse": "^10.0.1",
     "sass": "^1.49.0",
     "strapi-comments-client": "^2.0.3",
-    "strapi-ratings-client": "^2.0.3",
+    "strapi-ratings-client": "^2.0.5",
     "unified": "^10.1.1"
   },
   "devDependencies": {

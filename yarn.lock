@@ -3121,10 +3121,10 @@ strapi-comments-client@^2.0.3:
   dependencies:
     date-fns "^2.28.0"
 
-strapi-ratings-client@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/strapi-ratings-client/-/strapi-ratings-client-2.0.3.tgz#5c9c6ca4b6810df23776dd86bfcac8ae6edca29a"
-  integrity sha512-WUwYa3p1StgjHfk+0a4GZ4NCY0V93MeQJpI33CeQVoXdwiSlpUCvMiNP/aavgFcuXQ4Uzs98f+tory7pEXw0VA==
+strapi-ratings-client@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/strapi-ratings-client/-/strapi-ratings-client-2.0.5.tgz#a331527d974b1a4aaa79fd76d50f8fdee1a3c7ea"
+  integrity sha512-sD4NXr12faZXLWQqxD/06n7GFbr61w816SG1bIwfnm1wSa5DJW3n8WgFNVJRjJjqYhBAeTNSi+famkk/ne2Fmg==
   dependencies:
     date-fns "^2.28.0"
     react-awesome-stars-rating "^0.6.0"
