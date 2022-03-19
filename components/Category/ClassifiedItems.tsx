@@ -1,3 +1,5 @@
+import React from "react"
+
 import { ICourseSummary, IEjercicioSummary } from "../../lib/content"
 import CourseSummary from "./CourseSummary"
 import EjercicioSummary from "./EjercicioSummary"

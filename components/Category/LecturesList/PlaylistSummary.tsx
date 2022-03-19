@@ -1,6 +1,5 @@
-import { useContext } from "react"
+import React, { useContext } from "react"
 import { toast } from "react-toastify"
-import Link from 'next/link'
 import formatDuration from "format-duration"
 
 import AuthContext from "../../../context/AuthContext"
@@ -27,7 +26,7 @@ const PlaylistSummary = (props: PlaylistSummaryProps) => {
           if (coursePurchased && classesCompleted) {
             classCompleted = classesCompleted.some(({id}) => id === lecture.id)
           }
-          const checkLecture = async (e: any) => {
+          const checkLecture = async (e: React.ChangeEvent<HTMLInputElement>) => {
             e.stopPropagation()
             if (!user) {
               return
@@ -58,7 +57,7 @@ const PlaylistSummary = (props: PlaylistSummaryProps) => {
                 <input
                   type="checkbox"
                   className={"me-1 ".concat(styles.checkbox)}
-                  onClick={checkLecture}
+                  onChange={checkLecture}
                   defaultChecked={classCompleted ? true : undefined}
                 />
               }

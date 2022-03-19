@@ -1,5 +1,5 @@
 import { STRAPI } from "./urls"
-import { ICategory, ICourse } from "./categories"
+import { ICategory } from "./categories"
 import { BreadcrumbElement } from "../components/Layout"
 
 /*
@@ -207,6 +207,7 @@ export function buildIndex({parentUrl, root}: ITree) {
         page: [...page, e.slug]
       }
     }
+    result.push(ejercicioPage)
   })
   root.subcategories.map(subcategory => {
     const subIndex =  buildIndex({

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import Link from "next/link"
 
 import authContext from "../context/AuthContext"

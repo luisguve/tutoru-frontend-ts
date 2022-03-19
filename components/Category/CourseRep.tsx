@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext, useRef } from "react"
 import { useRouter } from "next/router"
-import Head from "next/head"
 import Hls from 'hls.js';
 
 import { Ilecture } from "../../lib/content"
@@ -36,7 +35,7 @@ const CourseRep = ({data}: CourseRepProps) => {
   const [dataRep, setDataRep] = useState<IDataRep | null>(null)
   const [errData, setErrData] = useState<IErrData | null>(null)
   const router = useRouter()
-  const { coursesIDs, loadingItems } = useContext(MyLearningContext)
+  const { loadingItems } = useContext(MyLearningContext)
   const coursePurchased = useCoursePurchased(courseID)
   const { user } = useContext(AuthContext)
   const fetchDataRep = async (lectureID?: number) => {
@@ -50,7 +49,7 @@ const CourseRep = ({data}: CourseRepProps) => {
     } else {
       url = `${STRAPI}/api/masterclass/courses/${courseID}/resume-course`
     }
-    const options: RequestInit = {
+    const options = {
       headers: { Authorization: `Bearer ${user.token}` }
     }
     try {
@@ -80,7 +79,7 @@ const CourseRep = ({data}: CourseRepProps) => {
     if (coursePurchased && !dataRep) {
       fetchDataRep()
     }
-  }, [loadingItems, coursePurchased, user])
+  }, [loadingItems,coursePurchased,user])
   return (
     <div>
       {
@@ -163,7 +162,7 @@ const Reproductor = (props: ReproductorProps) => {
         hls.destroy();
       }
     };
-  }, [videoRef]);
+  }, [videoRef,src]);
 
   return (
     <video
@@ -182,7 +181,7 @@ interface VideoMetadataProps {
 const VideoMetadata = (props: VideoMetadataProps) => {
   const { lectures, current } = props
   let title = "0 - Sin titulo"
-  for (var i = lectures.length - 1; i >= 0; i--) {
+  for (let i = lectures.length - 1; i >= 0; i--) {
     if (lectures[i].id === current) {
       title = `${i+1} - ` + lectures[i].title
       break

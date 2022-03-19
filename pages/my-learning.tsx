@@ -1,12 +1,9 @@
-import { useContext, useState, useEffect } from "react"
-import Link from "next/link"
+import { useContext } from "react"
 import Head from "next/head"
 
-import { STRAPI } from "../lib/urls"
 import AuthContext from "../context/AuthContext"
 import Layout from "../components/Layout"
 import { usePurchaseHistory } from "../hooks/history"
-import CourseSummary from "../components/Category/CourseSummary"
 import ClassifiedItems from "../components/Category/ClassifiedItems"
 import metadata, { INavigationItem, ISiteInfo } from "../lib/metadata"
 

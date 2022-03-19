@@ -29,7 +29,7 @@ const AddToCartButton = ({ item }: AddButtonProps) => {
       prefix = COURSE_PREFIX
     }
     setAdded(itemsIDs.some(({id}) => id === `${prefix}${item.id}`))
-  }, [itemsIDs])
+  }, [itemsIDs, item.id, item.kind])
   if (!user) {
     return <p className="mb-0 small">Login to purchase this course</p>
   }

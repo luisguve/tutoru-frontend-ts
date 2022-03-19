@@ -1,17 +1,14 @@
-import { useContext } from "react"
-import { toast } from "react-toastify"
-import Link from 'next/link'
+import React, { useContext } from "react"
 import formatDuration from "format-duration"
 
 import AuthContext from "../../../context/AuthContext"
 import { Ilecture } from "../../../lib/content"
 import { STRAPI } from "../../../lib/urls"
 import styles from "../../../styles/PaginaCurso.module.scss"
-import { useCoursePurchased, useClassesCompleted } from "../../../hooks/item"
 
 interface PlaylistProps {
   lectures: Ilecture[];
-  changeLecture: (lectureID?: number) => Promise<void>;
+  changeLecture: (_?: number) => Promise<void>;
   currentLectureID: number | null;
   courseID: number;
   classesCompleted: Ilecture[];
@@ -44,7 +41,7 @@ const Playlist = (props: PlaylistProps) => {
             }
             changeLecture(lecture.id)
           }
-          const marcarVisto = async e => {
+          const marcarVisto = async (e: React.ChangeEvent<HTMLInputElement>) => {
             e.stopPropagation()
             if (!user) {
               return
@@ -74,7 +71,7 @@ const Playlist = (props: PlaylistProps) => {
               <input
                 type="checkbox"
                 className={"me-1 ".concat(styles.checkbox)}
-                onClick={marcarVisto}
+                onChange={marcarVisto}
                 defaultChecked={completed}
               />
               <span className="me-1 me-sm-2">{idx + 1}.</span>

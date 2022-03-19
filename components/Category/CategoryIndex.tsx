@@ -114,7 +114,6 @@ const CategoryIndex = ({ data }: CategoryIndexProps) => {
   const {
     title,
     courses,
-    thumbnail,
     ejercicios,
     description,
     subcategories,

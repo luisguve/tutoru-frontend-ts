@@ -83,8 +83,6 @@ const Navbar = (props: NavbarProps) => {
     // close all inner dropdowns when parent is closed
     if (window && window.innerWidth < 992) {
 
-      const this1: any = this;
-
       document.querySelectorAll('.navbar .dropdown').forEach(function(everydropdown){
         everydropdown.addEventListener('hidden.bs.dropdown', function () {
           // after dropdown is hidden, then find all submenus

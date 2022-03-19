@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react"
 import Link from 'next/link'
 
 import { IEjercicioSummary } from "../../lib/content"
-import MyLearningContext from "../../context/MyLearningContext"
 import AuthContext from "../../context/AuthContext"
 import { STRAPI } from "../../lib/urls"
 import AddToCartButton from '../Cart/AddToCartButton'
@@ -20,7 +19,7 @@ const DownloadModalBody = ({count, slug}: {count: number, slug: string}) => {
         return
       }
       const url = `${STRAPI}/api/masterclass/ejercicios/${slug}/download`
-      const options: RequestInit = {
+      const options = {
         headers: { Authorization: `Bearer ${user.token}` }
       }
       try {
@@ -41,7 +40,7 @@ const DownloadModalBody = ({count, slug}: {count: number, slug: string}) => {
     if ((count > 0) && !fileUrl) {
       requestDownloadUrl(slug)
     }
-  }, [count])
+  }, [count,fileUrl,slug,user])
   if (!fileUrl) {
     return (
       <>
@@ -142,7 +141,6 @@ const EjercicioSummary = (props: EjercicioSummaryProps) => {
     </Link>
   )
 
-  const { loadingItems } = useContext(MyLearningContext)
   const ejercicioComprado = useEjercicioComprado(data.id)
 
   return (

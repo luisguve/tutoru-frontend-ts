@@ -16,7 +16,6 @@ import { STRAPI } from "../../lib/urls"
 import { ICourseSummary } from "../../lib/content"
 
 
-
 const Tabs = dynamic(import('react-tabs').then(mod => mod.Tabs), { ssr: false }) // disable ssr
 
 
@@ -51,10 +50,10 @@ const CourseDesc = (props: CoursePageProps) => {
   useEffect(() => {
     setReviewsUser(user)
     setCommentsUser(user)
-  }, [user])
+  }, [user,setReviewsUser,setCommentsUser])
   useEffect(() => {
     setCanPostReview(coursePurchased === true)
-  }, [coursePurchased])
+  }, [coursePurchased,setCanPostReview])
   return (
     <>
       <CourseSummary onPage displayImage data={data} />

@@ -98,8 +98,8 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
   // Elementos del componente breadcrumb
   const {
     breadcrumb,
-    tituloCabecera,
-    metaSubtitulo
+    // tituloCabecera,
+    // metaSubtitulo
   } = await buildBreadcrumb(index, path)
 
   return {
