@@ -61,13 +61,13 @@ const ConfirmationTab = () => {
               ) : (
                 <>
                   <button
-                    className="btn btn-outline-primary me-1"
+                    className="btn btn-sm btn-outline-secondary me-1"
                     onClick={clean}
                     data-bs-toggle="modal"
                     data-bs-target="#cartModalStep0"
                   >Clear cart</button>
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-sm btn-primary"
                     data-bs-target="#cartModalStep2"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"

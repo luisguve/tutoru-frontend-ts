@@ -150,7 +150,7 @@ const CheckoutTab = () => {
               <>
                 <ItemsList data={data} />
                 <h4>Total: ${data.total}</h4>
-                <div className="d-flex flex-column my-3">
+                <div className="d-flex flex-column mt-3 mb-1">
                   <div className="d-flex flex-column align-items-center mb-2">
                     <p className="fw-bold fs-6 mb-4">Choose payment method</p>
                     <div
@@ -210,9 +210,9 @@ const CheckoutTab = () => {
               <p>Here will appear the courses you add</p>
             }
           </div>
-          <div className="modal-footer">
+          <div className="modal-footer justify-content-start">
             <button
-              className={"btn btn-primary".concat(sending ? " disabled" : "")}
+              className={"btn btn-secondary btn-sm".concat(sending ? " disabled" : "")}
               data-bs-target="#cartModal"
               data-bs-toggle="modal"
               data-bs-dismiss="modal"
