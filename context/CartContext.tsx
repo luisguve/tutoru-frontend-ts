@@ -213,6 +213,10 @@ const getSession = (): ISession => {
   return {}
 }
 
+interface IDataCart {
+  items: IItem[] | null;
+  itemsIDs: IItemID[] | null;
+}
 const saveSession = (items: IItem[] | null, itemsIDs: IItemID[] | null) => {
   if (typeof(Storage) !== undefined) {
     const dataStr = localStorage.getItem("data")
@@ -220,7 +224,12 @@ const saveSession = (items: IItem[] | null, itemsIDs: IItemID[] | null) => {
     if (dataStr) {
       data = JSON.parse(dataStr)
     }
-    const newDataCart: {items: IItem[] | null, itemsIDs: IItemID[] | null} = data.cart
+
+    const defaultDataCart: IDataCart = {
+      items: null,
+      itemsIDs: null,
+    }
+    const newDataCart: IDataCart = data.cart || defaultDataCart
     if (items !== null) {
       newDataCart.items = items
     }
