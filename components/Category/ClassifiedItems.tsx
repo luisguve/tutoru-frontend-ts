@@ -6,7 +6,7 @@ import EjercicioSummary from "./EjercicioSummary"
 
 interface ClassifiedItemsProps {
   ejercicios: IEjercicioSummary[] | null;
-  courses: {course: ICourseSummary}[] | null;
+  courses: ICourseSummary[] | null;
 }
 
 const ClassifiedItems = (props: ClassifiedItemsProps) => {
@@ -38,7 +38,7 @@ const ClassifiedItems = (props: ClassifiedItemsProps) => {
     }, ejerciciosClasificados)
   }
   if (courses) {
-    cursosClasificados = courses.reduce((grupos, {course: c}) => {
+    cursosClasificados = courses.reduce((grupos, c) => {
       // Establece el nombre de la categoria para títulos
       const categoriaActual = c.category.title
 

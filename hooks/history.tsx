@@ -7,7 +7,7 @@ import { ICourseSummary, IEjercicioSummary } from "../lib/content"
 import { IOrder } from "./order"
 
 interface ILearning {
-  courses: {course: ICourseSummary}[] | null;
+  courses: ICourseSummary[] | null;
   ejercicios: IEjercicioSummary[] | null;
 }
 
