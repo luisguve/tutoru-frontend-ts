@@ -56,7 +56,12 @@ export const CategorySummary = (props: CategorySummaryProps) => {
   const totalCourses = courses.concat(featured_courses)
 
   const coursesSlides = totalCourses.map(c => {
-    const imgUrl = `${STRAPI}${c.thumbnail[0].url}`
+    const imgPath = c.thumbnail[0].url
+    let imgUrl = `${STRAPI}${imgPath}`
+    if (imgPath.startsWith("http")) {
+      // this is an absolute URL
+      imgUrl = imgPath
+    }
     return (
       <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={c.slug}>
         <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
@@ -70,7 +75,12 @@ export const CategorySummary = (props: CategorySummaryProps) => {
   })
 
   const ejerciciosSlides = featured_ejercicios.map(e => {
-    const imgUrl = `${STRAPI}${e.thumbnail[0].url}`
+    const imgPath = e.thumbnail[0].url
+    let imgUrl = `${STRAPI}${imgPath}`
+    if (imgPath.startsWith("http")) {
+      // this is an absolute URL
+      imgUrl = imgPath
+    }
     return (
       <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={e.slug}>
         <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
