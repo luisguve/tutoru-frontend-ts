@@ -1,11 +1,14 @@
+import { useContext } from "react"
 import Link from 'next/link'
 import { ReviewStats } from "strapi-ratings-client"
 import { CommentStats } from "strapi-comments-client"
 import formatDuration from "format-duration"
 
 import { ICourseSummary } from "../../lib/content"
+import AuthContext from "../../context/AuthContext"
 import { STRAPI } from "../../lib/urls"
 import AddToCartButton from '../Cart/AddToCartButton'
+import BuyNowButton from '../Cart/BuyNowButton'
 import styles from "../../styles/ListaCurso.module.scss"
 import { useCoursePurchased, useCourseDetails } from "../../hooks/item"
 
@@ -17,6 +20,7 @@ interface CourseSummaryProps {
   displayImage?: boolean;
 }
 const CourseSummary = (props: CourseSummaryProps) => {
+  const { user } = useContext(AuthContext)
   const { data, gotoCourse, onPage, displayImage, hideDescription } = props
   const { category } = data
   const coursePurchased = useCoursePurchased(data.id)
@@ -79,7 +83,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
       {
         (!coursePurchased && !gotoCourse) && <p className="small m-0"><strong>${data.price}</strong></p>
       }
-      <div className="d-flex flex-column flex-sm-row align-self-stretch align-self-lg-start">
+      <div className="d-flex flex-column align-self-stretch align-self-lg-start">
         <div className={"d-flex align-items-center ".concat(styles.botones)}>
           {
             !onPage && (
@@ -94,6 +98,12 @@ const CourseSummary = (props: CourseSummaryProps) => {
             : <AddToCartButton item={data} />
           }
         </div>
+        {
+          (user && !(gotoCourse || coursePurchased)) &&
+          <div className="mt-1 mt-sm-1 d-flex flex-column">
+            <BuyNowButton item={data} />
+          </div>
+        }
       </div>
     </div>
   )

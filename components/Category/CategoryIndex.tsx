@@ -7,6 +7,7 @@ import CourseSummary from "./CourseSummary"
 import EjercicioSummary from "./EjercicioSummary"
 import { ICategorySummary } from "../../lib/content"
 import { STRAPI } from "../../lib/urls"
+import { BuyNowTab } from "../Cart/BuyNowButton"
 import Subcategories from "./Subcategories"
 import styles from "../../styles/Category.module.scss"
 
@@ -95,6 +96,11 @@ export const CategorySummary = (props: CategorySummaryProps) => {
 
   const slidesJSX = [firstSlide].concat([...coursesSlides, ...ejerciciosSlides])
 
+  // Modals must be rendered outside of Carousel
+  const buyNowModals = [...totalCourses,...featured_ejercicios].map(item => (
+    <BuyNowTab key={item.slug} item={item} />
+  ))
+
   return (
     <>
       <h2 className="text-center mb-lg-3">
@@ -112,6 +118,7 @@ export const CategorySummary = (props: CategorySummaryProps) => {
       >
         {slidesJSX}
       </Carousel>
+      {buyNowModals}
     </>
   )
 }
