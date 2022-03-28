@@ -91,7 +91,7 @@ interface BreadcrumbProps {
   isHome?: boolean;
 }
 const Breadcrumb = ({elements, isHome}: BreadcrumbProps) => {
-  const containerClass = "mt-3 mt-md-5 px-2 px-md-0 ms-1 ms-md-0 small"
+  const containerClass = "mt-3 mt-md-5 px-2 px-md-0 ms-1 ms-md-0 small d-flex flex-wrap"
   if (elements) {
     const links = elements.map((e, i) => {
       return (
