@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import { useRouter } from "next/router"
 import { loadStripe } from "@stripe/stripe-js"
 import { toast } from "react-toastify"
