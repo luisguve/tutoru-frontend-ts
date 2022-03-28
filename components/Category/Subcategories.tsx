@@ -43,9 +43,9 @@ const Subcategories = (props: SubcategoriesProps) => {
     })
   }
   return (
-    <>
+    <div className="d-flex flex-column d-lg-block">
       {recursiveSubcategory({parentUrl, data})}
-    </>
+    </div>
   )
 }
 

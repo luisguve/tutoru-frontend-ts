@@ -38,19 +38,31 @@ export const CategorySummary = (props: CategorySummaryProps) => {
   }
 
   const firstSlide = (
-    <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={slug}>
-      <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
-        <img src={imgUrl} alt={thumbnail[0].name} />
-      </div>
+    <div
+      key={slug}
+      className="d-flex flex-column"
+    >
       <div
-        className={
-          styles["slider-content"]+" d-flex flex-column align-items-start pt-3 pt-lg-0 ps-lg-3 py-1"
-       }>
-        <p>{description}</p>
-        <p>{courses_count} course{courses_count === 1 ? "" : "s"}</p>
-        <p>{ejercicios_count} ejercicio{ejercicios_count === 1 ? "" : "s"}</p>
-        <Subcategories data={subcategories} parentUrl={slug} fontSize={14} />
+        className="d-flex flex-column flex-lg-row justify-content-between text-start"
+      >
+        <div className={styles["slider-thumbnail"]+" d-none d-lg-flex align-items-center"}>
+          <img src={imgUrl} alt={thumbnail[0].name} />
+        </div>
+        <div className="d-flex">
+          <div className="d-lg-none me-1">
+            <img src={imgUrl} alt={thumbnail[0].name} width="50" />
+          </div>
+          <div
+            className={
+              styles["slider-content"]+" d-flex flex-column align-items-start pt-lg-3 ps-lg-3"
+           }>
+            <p>{description}</p>
+            <p className="m-0">{courses_count} course{courses_count === 1 ? "" : "s"}</p>
+            <p className="m-0">{ejercicios_count} ejercicio{ejercicios_count === 1 ? "" : "s"}</p>
+          </div>
+        </div>
       </div>
+      <Subcategories data={subcategories} parentUrl={slug} fontSize={14} />
     </div>
   )
 
@@ -64,8 +76,11 @@ export const CategorySummary = (props: CategorySummaryProps) => {
       imgUrl = imgPath
     }
     return (
-      <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={c.slug}>
-        <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
+      <div
+        key={c.slug}
+        className="d-flex flex-column flex-lg-row justify-content-between text-start"
+      >
+        <div className={styles["slider-thumbnail"]+" d-none d-lg-flex align-items-center"}>
           <img src={imgUrl} alt={c.thumbnail[0].name} />
         </div>
         <div className={styles["slider-content"]+" pt-3 pt-lg-0 ps-lg-3 py-1"}>
@@ -83,8 +98,11 @@ export const CategorySummary = (props: CategorySummaryProps) => {
       imgUrl = imgPath
     }
     return (
-      <div className="d-flex flex-column flex-lg-row justify-content-between text-start" key={e.slug}>
-        <div className={styles["slider-thumbnail"]+" d-flex align-items-center"}>
+      <div
+        key={e.slug}
+        className="d-flex flex-column flex-lg-row justify-content-between text-start"
+      >
+        <div className={styles["slider-thumbnail"]+" d-none d-lg-flex align-items-center"}>
           <img src={imgUrl} alt={e.thumbnail[0].name} />
         </div>
         <div className={styles["slider-content"]+" pt-3 pt-lg-0 ps-lg-3 py-1"}>
@@ -110,11 +128,12 @@ export const CategorySummary = (props: CategorySummaryProps) => {
         }
       </h2>
       <Carousel
-        interval={7000}
+        interval={8000}
         autoPlay={false}
         infiniteLoop={false}
         showIndicators={false}
         showThumbs={false}
+        swipeable={false}
       >
         {slidesJSX}
       </Carousel>

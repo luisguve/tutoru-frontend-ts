@@ -145,19 +145,28 @@ const EjercicioSummary = (props: EjercicioSummaryProps) => {
 
   return (
     <div key={data.slug} className="d-flex flex-column align-items-start">
-      <div className="d-flex flex-wrap align-items-center">
-        <h5 className="me-3 mb-1">
-          {
-            onPage ?
-              data.title
-            : (
-              <Link href={solucionUrl}>
-                <a>{data.title}</a>
-              </Link>
-            )
-          }
-        </h5>
-        {linkToCategory}
+      <div className="d-flex">
+        {
+          !displayImage && (
+            <div className={styles["carousel-img-small"] + " d-flex d-lg-none me-1"}>
+              <img src={imgUrl} />
+            </div>
+          )
+        }
+        <div className="d-flex flex-wrap align-items-start align-items-lg-center">
+          <h5 className="me-3 mb-1">
+            {
+              onPage ?
+                data.title
+              : (
+                <Link href={solucionUrl}>
+                  <a>{data.title}</a>
+                </Link>
+              )
+            }
+          </h5>
+          {linkToCategory}
+        </div>
       </div>
       {
         (onPage || displayDescription) && <p>{data.description}</p>

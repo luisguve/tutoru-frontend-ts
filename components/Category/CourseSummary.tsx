@@ -1,4 +1,5 @@
 import { useContext } from "react"
+import Image from "next/image"
 import Link from 'next/link'
 import { ReviewStats } from "strapi-ratings-client"
 import { CommentStats } from "strapi-comments-client"
@@ -46,26 +47,35 @@ const CourseSummary = (props: CourseSummaryProps) => {
   )
   return (
     <div key={data.slug} className="d-flex flex-column align-items-start">
-      <div className="d-flex flex-wrap align-items-center">
-        <h5 className="me-3 mb-1">
-          {
-            onPage ?
-              data.title
-            : (
-              <Link href={courseUrl}>
-                <a>{data.title}</a>
-              </Link>
-            )
-          }
-        </h5>
-        {linkToCategory}
+      <div className="d-flex">
+        {
+          !displayImage && (
+            <div className="d-flex d-lg-none me-1">
+              <img src={imgUrl} />
+            </div>
+          )
+        }
+        <div className="d-flex flex-wrap align-items-start align-items-lg-center">
+          <h5 className="me-3 mb-1">
+            {
+              onPage ?
+                data.title
+              : (
+                <Link href={courseUrl}>
+                  <a>{data.title}</a>
+                </Link>
+              )
+            }
+          </h5>
+          {linkToCategory}
+        </div>
       </div>
       {
         (!hideDescription) && <p>{data.description}</p>
       }
       {
         displayImage && (
-          <div className="d-flex align-items-center">
+          <div className={styles["carousel-img-small"] + " d-flex align-items-center"}>
             <img className="img-flud mw-100" src={imgUrl} alt={data.thumbnail[0].name} />
           </div>
         )
