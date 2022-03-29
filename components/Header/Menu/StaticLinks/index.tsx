@@ -20,7 +20,7 @@ const StaticLinks = () => {
           <li className="nav-item d-flex align-items-center">
             <button
               type="button"
-              className="btn btn-primary mt-1 mb-2 my-lg-0"
+              className="btn btn-primary mt-1 my-lg-0"
               data-bs-toggle="modal"
               data-bs-target="#loginModal"
             >
@@ -29,7 +29,7 @@ const StaticLinks = () => {
           </li>
           <li className="nav-item d-flex align-items-center ms-lg-2">
             <button
-              className="btn btn-secondary mt-1 mb-2 my-lg-0"
+              className="btn btn-secondary mt-1 mb-1 my-lg-0"
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#signupModal"

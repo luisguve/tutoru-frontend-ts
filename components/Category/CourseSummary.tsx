@@ -49,7 +49,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
       <div className="d-flex">
         {
           !displayImage && (
-            <div className="d-flex d-lg-none me-1">
+            <div className={styles["carousel-thumbnail-small"] + " d-flex d-lg-none me-1"}>
               <img src={imgUrl} />
             </div>
           )
@@ -74,7 +74,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
       }
       {
         displayImage && (
-          <div className={styles["carousel-img-small"] + " d-flex align-items-center"}>
+          <div className="d-flex align-items-center">
             <img className="img-flud mw-100" src={imgUrl} alt={data.thumbnail[0].name} />
           </div>
         )

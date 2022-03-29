@@ -10,6 +10,7 @@ import { STRAPI } from "../../lib/urls"
 import { BuyNowTab } from "../Cart/BuyNowButton"
 import Subcategories from "./Subcategories"
 import styles from "../../styles/Category.module.scss"
+import thumbnailStyles from "../../styles/ListaCurso.module.scss"
 
 interface CategorySummaryProps {
   data: ICategorySummary;
@@ -50,7 +51,7 @@ export const CategorySummary = (props: CategorySummaryProps) => {
         </div>
         <div className="d-flex">
           <div className="d-lg-none me-1">
-            <img src={imgUrl} alt={thumbnail[0].name} width="50" />
+            <img src={imgUrl} alt={thumbnail[0].name} className={thumbnailStyles["carousel-thumbnail-small"]} />
           </div>
           <div
             className={
@@ -174,7 +175,7 @@ const CategoryIndex = ({ data }: CategoryIndexProps) => {
 
   return (
     <>
-      <h1>{title}</h1>
+      <h1 className="text-center">{title}</h1>
       {
         (subcategories.length > 0) &&
         <div className="my-4">

@@ -148,7 +148,7 @@ const EjercicioSummary = (props: EjercicioSummaryProps) => {
       <div className="d-flex">
         {
           !displayImage && (
-            <div className={styles["carousel-img-small"] + " d-flex d-lg-none me-1"}>
+            <div className="d-flex d-lg-none me-1">
               <img src={imgUrl} />
             </div>
           )

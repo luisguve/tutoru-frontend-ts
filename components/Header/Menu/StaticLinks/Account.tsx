@@ -1,4 +1,6 @@
 import { useState, useContext } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faUser } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -42,7 +44,7 @@ export const Desktop = () => {
   const { logoutUser } = useContext(AuthContext)
   return (
     <li
-      className={showClass.concat(" nav-item dropdown")}
+      className={showClass.concat(" nav-item dropdown d-none d-lg-block")}
       onMouseEnter={showMenu}
       onMouseLeave={hideMenu}
     >
@@ -51,10 +53,10 @@ export const Desktop = () => {
         id="cuentaDropdown"
         role="button"
         data-bs-toggle="dropdown"
-        className={showClass.concat(" nav-link p-0 d-none d-lg-block")}
+        className={showClass.concat(" nav-link")}
         aria-expanded={ariaExpanded}
       >
-        <Image alt="profile" width="40" height="40" src={profilePic} />
+        <FontAwesomeIcon icon={faUser} size="lg" />
       </a>
       <ul
         aria-labelledby="cuentaDropdown"

@@ -9,3 +9,9 @@
     width: 60%;
   }
 }
+
+.category-tree {
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
+  }
+}

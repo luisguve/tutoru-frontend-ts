@@ -24,6 +24,12 @@
 
 .Header__Pagina {
   background: brown;
+  .Contenido h1 {
+    font-size: 1.25rem;
+    @media screen and (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+  }
 }
 
 .Contenido {
