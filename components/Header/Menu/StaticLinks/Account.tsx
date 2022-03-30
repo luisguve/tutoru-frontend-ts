@@ -2,9 +2,7 @@ import { useState, useContext } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUser } from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
-import Image from "next/image"
 
-import profilePic from "../../../../public/profilepic2.png"
 import AuthContext from "../../../../context/AuthContext"
 
 export const Mobile = () => {
