@@ -4,6 +4,11 @@ import { ICourseSummary, IEjercicioSummary } from "../../lib/content"
 import CourseSummary from "./CourseSummary"
 import EjercicioSummary from "./EjercicioSummary"
 
+const nullCategory = {
+  title: "Uncategorized",
+  slug: "/"
+}
+
 interface ClassifiedItemsProps {
   ejercicios: IEjercicioSummary[] | null;
   courses: ICourseSummary[] | null;
@@ -23,9 +28,12 @@ const ClassifiedItems = (props: ClassifiedItemsProps) => {
 
   let ejerciciosClasificados: Record<string, IEjercicioSummary[]> = {}
   let cursosClasificados: Record<string, ICourseSummary[]> = {}
-  
+
   if (ejercicios) {
     ejerciciosClasificados = ejercicios.reduce((grupos, e) => {
+      if (!e.category) {
+        e.category = nullCategory
+      }
       // Establece el nombre de la categoria para títulos
       const categoriaActual = e.category.title
 
@@ -39,6 +47,9 @@ const ClassifiedItems = (props: ClassifiedItemsProps) => {
   }
   if (courses) {
     cursosClasificados = courses.reduce((grupos, c) => {
+      if (!c.category) {
+        c.category = nullCategory
+      }
       // Establece el nombre de la categoria para títulos
       const categoriaActual = c.category.title
 
