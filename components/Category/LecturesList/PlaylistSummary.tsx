@@ -3,10 +3,11 @@ import { toast } from "react-toastify"
 import formatDuration from "format-duration"
 
 import AuthContext from "../../../context/AuthContext"
+import PlaylistContext, { PlaylistProvider } from "../../../context/PlaylistContext"
 import { Ilecture } from "../../../lib/content"
 import { STRAPI } from "../../../lib/urls"
 import styles from "../../../styles/PaginaCurso.module.scss"
-import { useCoursePurchased, useClassesCompleted } from "../../../hooks/item"
+import { useCoursePurchased } from "../../../hooks/item"
 
 interface PlaylistSummaryProps {
   data: Ilecture[],
@@ -16,21 +17,22 @@ const PlaylistSummary = (props: PlaylistSummaryProps) => {
   const { user } = useContext(AuthContext)
   const { data, courseID } = props
   const coursePurchased = useCoursePurchased(courseID)
-  const { classesCompleted } = useClassesCompleted(courseID)
+  const { classesCompleted, toggleClassCompleted } = useContext(PlaylistContext)
 
   return (
     <ol className="list-unstyled">
       {
         data.map((lecture, idx) => {
-          let classCompleted = false
-          if (coursePurchased && classesCompleted) {
-            classCompleted = classesCompleted.some(({id}) => id === lecture.id)
+          let completed = false
+          if (coursePurchased) {
+            completed = classesCompleted.some(({id}) => id === lecture.id)
           }
           const checkLecture = async (e: React.ChangeEvent<HTMLInputElement>) => {
             e.stopPropagation()
             if (!user) {
               return
             }
+            toggleClassCompleted(lecture.id)
             const url = `${STRAPI}/api/masterclass/courses/${courseID}/check-lecture?lecture=${lecture.id}`
             const options = {
               method: "PUT",
@@ -53,13 +55,19 @@ const PlaylistSummary = (props: PlaylistSummaryProps) => {
               key={lecture.id}
             >  
               {
-                (user && coursePurchased) &&
-                <input
-                  type="checkbox"
-                  className={"me-1 ".concat(styles.checkbox)}
-                  onChange={checkLecture}
-                  defaultChecked={classCompleted ? true : undefined}
-                />
+                (user && coursePurchased) && (
+                  <label className={styles["checkmark-container"]}>
+                    <input
+                      type="checkbox"
+                      className={"me-1 ".concat(styles.checkbox)}
+                      onChange={checkLecture}
+                      checked={completed}
+                    />
+                    <span
+                      className={styles["checkmark"]+(completed?` ${styles["checked"]}` : "")}
+                    ></span>
+                  </label>
+                )
               }
               <span className="me-1 me-sm-2 me-md-5">{idx + 1}.</span>
               <div className="pt-3">
@@ -74,4 +82,12 @@ const PlaylistSummary = (props: PlaylistSummaryProps) => {
   )
 }
 
-export default PlaylistSummary
+const PlaylistWrapper = (props: PlaylistSummaryProps) => {
+  return (
+    <PlaylistProvider courseID={props.courseID}>
+      <PlaylistSummary {...props} />
+    </PlaylistProvider>
+  )
+}
+
+export default PlaylistWrapper

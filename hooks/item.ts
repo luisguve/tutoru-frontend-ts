@@ -69,47 +69,6 @@ export const useCourseDetails = (id: number) => {
   }
 }
 
-export const useClassesCompleted = (id: number) => {
-  const [data, setData] = useState<IClassesCompleted | null>(null)
-  const [loadingClassesCompleted, setLoading] = useState(false)
-
-  const { user } = useContext(AuthContext)
-
-  useEffect(() => {
-    const fetchClassesCompleted = async (id: number) => {
-      if (!user) {
-        return
-      }
-      setLoading(true)
-      try {
-        const cursoUrl = `${STRAPI}/api/masterclass/course-details/${id}`
-        const options: RequestInit = {
-          headers: {
-            "Authorization": `Bearer ${user.token}`
-          }
-        }
-        const data_res = await fetch(cursoUrl, options)
-        const data = await data_res.json()
-        setData(data)
-        if (!data_res.ok) {
-          console.log({data})
-          toast("Could not fetch classes completed")
-        }
-      } catch (err) {
-        console.log(err)
-        toast("Could not fetch classes completed")
-      }
-      setLoading(false)
-    }
-    fetchClassesCompleted(id)
-  }, [id, user])
-
-  return {
-    classesCompleted: data ? data.classesCompleted : null,
-    loadingClassesCompleted
-  }
-}
-
 export const useEjercicioComprado = (id: number) => {
   const [ejercicioComprado, setEjercicioComprado] = useState<boolean | null>(null)
   const { ejerciciosIDs } = useContext(MyLearningContext)

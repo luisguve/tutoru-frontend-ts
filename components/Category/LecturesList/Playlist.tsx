@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import formatDuration from "format-duration"
 
 import AuthContext from "../../../context/AuthContext"
+import PlaylistContext, { PlaylistProvider } from "../../../context/PlaylistContext"
 import { Ilecture } from "../../../lib/content"
 import { STRAPI } from "../../../lib/urls"
 import styles from "../../../styles/PaginaCurso.module.scss"
@@ -19,8 +20,10 @@ const Playlist = (props: PlaylistProps) => {
     changeLecture,
     currentLectureID,
     courseID,
-    classesCompleted
   } = props
+
+  const { classesCompleted, toggleClassCompleted } = useContext(PlaylistContext)
+
   const { user } = useContext(AuthContext)
   return (
     <ol className="list-unstyled">
@@ -46,6 +49,7 @@ const Playlist = (props: PlaylistProps) => {
             if (!user) {
               return
             }
+            toggleClassCompleted(lecture.id)
             const url = `${STRAPI}/api/masterclass/courses/${courseID}/check-lecture?lecture=${lecture.id}`
             const options = {
               method: "PUT",
@@ -68,12 +72,17 @@ const Playlist = (props: PlaylistProps) => {
               key={lecture.id}
               onClick={handleClick}
             >
-              <input
-                type="checkbox"
-                className={"me-1 ".concat(styles.checkbox)}
-                onChange={marcarVisto}
-                defaultChecked={completed}
-              />
+              <label className={styles["checkmark-container"]} onClick={e => e.stopPropagation()}>
+                <input
+                  type="checkbox"
+                  className={"me-1 ".concat(styles.checkbox)}
+                  onChange={marcarVisto}
+                  checked={completed}
+                />
+                <span
+                  className={styles["checkmark"]+(completed?` ${styles["checked"]}` : "")}
+                ></span>
+              </label>
               <span className="me-1 me-sm-2">{idx + 1}.</span>
               <div className="pt-3">
                 <p className="mb-0 small" style={{wordBreak: "break-all"}}>{lecture.title}</p>
@@ -87,4 +96,12 @@ const Playlist = (props: PlaylistProps) => {
   )
 }
 
-export default Playlist
+const PlaylistWrapper = (props: PlaylistProps) => {
+  return (
+    <PlaylistProvider courseID={props.courseID}>
+      <Playlist {...props} />
+    </PlaylistProvider>
+  )
+}
+
+export default PlaylistWrapper
