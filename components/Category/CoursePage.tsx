@@ -75,7 +75,7 @@ const CourseDesc = (props: CoursePageProps) => {
           <Comments />
         </TabPanel>
         <TabPanel>
-          <PlaylistSummary data={data.lectures} courseID={data.id} />
+          <PlaylistSummary data={data.modules} courseID={data.id} />
         </TabPanel>
       </Tabs>
     </>

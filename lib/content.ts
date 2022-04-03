@@ -12,6 +12,12 @@ export interface Ilecture {
     duration: number
   }
 }
+export interface IModule {
+  id: number;
+  title: string;
+  duration: number;
+  lectures: Ilecture[];
+}
 export interface IThumbnail {
   id: number;
   name: string;
@@ -28,7 +34,7 @@ export interface ICourseSummary {
   createdAt: string;
   updatedAt: string;
   thumbnail: IThumbnail[];
-  lectures: Ilecture[];
+  modules: IModule[];
   category: {
     slug: string;
     title: string;

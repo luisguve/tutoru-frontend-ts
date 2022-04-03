@@ -2,8 +2,8 @@ import { useContext } from "react"
 import Link from 'next/link'
 import { ReviewStats } from "strapi-ratings-client"
 import { CommentStats } from "strapi-comments-client"
-import formatDuration from "format-duration"
 
+import formatDuration from "../../lib/duration"
 import { ICourseSummary } from "../../lib/content"
 import AuthContext from "../../context/AuthContext"
 import { STRAPI } from "../../lib/urls"
@@ -44,6 +44,8 @@ const CourseSummary = (props: CourseSummaryProps) => {
       <a className="btn btn-sm btn-primary my-1">{category.title}</a>
     </Link>
   )
+
+  const lecturesNum = data.modules.reduce((total, {lectures}) => total + lectures.length, 0)
   return (
     <div key={data.slug} className="d-flex flex-column align-items-start">
       <div className="d-flex">
@@ -79,8 +81,8 @@ const CourseSummary = (props: CourseSummaryProps) => {
           </div>
         )
       }
-      <p className="small m-0">Duration: {formatDuration(data.duration * 1000)}</p>
-      <p className="small m-0">Lectures: {data.lectures.length}</p>
+      <p className="small m-0">Duration: {formatDuration(data.duration)}</p>
+      <p className="small m-0">Lectures: {lecturesNum}</p>
       <p className="small m-0">
         Students:{" "}
         {
