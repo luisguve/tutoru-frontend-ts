@@ -8,7 +8,7 @@ import {
 import {
   ReviewForm, Reviews, ReviewsConfigContext, ReviewsProvider
 } from "strapi-ratings-client"
-import { PlaylistSummary } from "./LecturesList"
+import { Playlist } from "./LecturesList"
 import CourseSummary from "./CourseSummary"
 import AuthContext from "../../context/AuthContext"
 import { useCoursePurchased } from "../../hooks/item"
@@ -75,7 +75,7 @@ const CourseDesc = (props: CoursePageProps) => {
           <Comments />
         </TabPanel>
         <TabPanel>
-          <PlaylistSummary data={data.modules} courseID={data.id} />
+          <Playlist modules={data.modules} courseID={data.id} />
         </TabPanel>
       </Tabs>
     </>

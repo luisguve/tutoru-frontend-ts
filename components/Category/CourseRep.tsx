@@ -102,7 +102,7 @@ const CourseRep = ({data}: CourseRepProps) => {
                 </div>
               : dataRep &&
                 <>
-                  <Reproductor
+                  <Player
                     PlayAuth={dataRep.PlayAuth}
                   />
                   <VideoMetadata
@@ -114,6 +114,7 @@ const CourseRep = ({data}: CourseRepProps) => {
           </div>
           <div className="col-lg-4 p-md-0">
             <Playlist
+              playable
               modules={modules}
               changeLecture={fetchDataRep}
               currentLectureID={dataRep ? dataRep.currentLectureID : null}
@@ -128,11 +129,11 @@ const CourseRep = ({data}: CourseRepProps) => {
 
 export default CourseRep
 
-interface ReproductorProps {
+interface PlayerProps {
   PlayAuth: string;
 }
 
-const Reproductor = (props: ReproductorProps) => {
+const Player = (props: PlayerProps) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const src = props.PlayAuth;
 
