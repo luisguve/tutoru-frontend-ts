@@ -36,7 +36,7 @@ const Playlist = (props: PlaylistProps) => {
 
           let startCountAt: number = 0
           for (let i = 0; i < idx; i++) {
-            startCountAt += module.lectures.length
+            startCountAt += modules[i].lectures.length
           }
 
           return (
