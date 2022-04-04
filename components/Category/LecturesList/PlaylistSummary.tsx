@@ -26,7 +26,7 @@ const PlaylistSummary = (props: PlaylistSummaryProps) => {
               </button>
             </h2>
             <div id={`playlist-summary-accordion-body-${idx}`} className="accordion-collapse collapse" aria-labelledby={`playlist-summary-accordion-header-${idx}`}>
-              <div className="accordion-body">
+              <div className="accordion-body p-0">
                 <ModuleLectures lectures={module.lectures} courseID={courseID} />
               </div>
             </div>
@@ -48,7 +48,7 @@ const ModuleLectures = (props: ModuleLecturesProps) => {
   const { classesCompleted, toggleClassCompleted } = useContext(PlaylistContext)
 
   return (
-    <ol className="list-unstyled">
+    <ol className="list-unstyled m-0">
       {
         lectures.map((lecture, idx) => {
           let completed = false

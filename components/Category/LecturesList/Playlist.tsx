@@ -67,7 +67,7 @@ const ModuleLectures = (props: ModuleLecturesProps) => {
   const { user } = useContext(AuthContext)
 
   return (
-    <ol className="list-unstyled">
+    <ol className="list-unstyled m-0">
       {
         lectures.map((lecture, idx) => {
           const completed = classesCompleted.some(l => l.id === lecture.id)

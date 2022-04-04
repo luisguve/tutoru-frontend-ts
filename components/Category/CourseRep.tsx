@@ -86,7 +86,7 @@ const CourseRep = ({data}: CourseRepProps) => {
           <div className="col-12">
             <h1 className="fs-2">{courseTitle}</h1>
           </div>
-          <div className="col-lg-8 px-0 px-md-2">
+          <div className="col-lg-8 px-0 px-md-2 mb-3">
             {
               (loading || loadingItems) ?
                 <div className="bg-dark d-flex flex-column align-items-center justify-content-center h-100" style={{minHeight: 340}}>
@@ -112,7 +112,7 @@ const CourseRep = ({data}: CourseRepProps) => {
                 </>
             }
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-4 p-md-0">
             <Playlist
               modules={modules}
               changeLecture={fetchDataRep}
@@ -190,6 +190,6 @@ const VideoMetadata = (props: VideoMetadataProps) => {
     }
   }
   return (
-    <h4 className="mt-1 mb-3 my-md-3 px-2 px-sm-4 px-lg-0 fs-6 fs-md-4">{title}</h4>
+    <h4 className="mt-1 mt-md-3 mb-0 px-2 px-sm-4 px-lg-0 fs-6 fs-md-4">{title}</h4>
   )
 }
