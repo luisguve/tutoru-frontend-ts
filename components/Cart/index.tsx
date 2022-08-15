@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import CartButton from "./CartButton"
 import ConfirmationTab from "./ConfirmationTab"
 import CheckoutTab from "./CheckoutTab"
+import { BuyNowTab } from "./BuyNowButton"
 
 export default function Cart() {
   const router = useRouter()
@@ -23,6 +24,8 @@ export default function Cart() {
       {/* Ventana de checkout: */}
       {/* Se selecciona el metodo de pago y se redirige al checkout */}
       <CheckoutTab />
+      {/* Ventana para comprar articulo */}
+      <BuyNowTab />
       <span className="d-none d-md-inline"><CartButton /></span>
     </>
   )

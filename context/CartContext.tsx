@@ -25,6 +25,8 @@ export interface ICartContext {
   add: (item: IItem) => void;
   remove: (item: IItem) => void;
   clean: () => void;
+  buyNowItem: IItem | null;
+  setBuyNowItem: (item: IItem | null) => void;
 }
 
 const defaultState: ICartContext = {
@@ -32,7 +34,9 @@ const defaultState: ICartContext = {
   itemsIDs: [],
   add: () => {},
   remove: () => {},
-  clean: () => {}
+  clean: () => {},
+  buyNowItem: null,
+  setBuyNowItem: () => {}
 }
 
 const CartContext = createContext<ICartContext>(defaultState)
@@ -72,6 +76,7 @@ export const CartProvider = (props: ICartProviderProps) => {
     }
     return []
   })
+  const [buyNowItem, setBuyNowItem] = useState<IItem | null>(null);
 
   const add = (item: IItem) => {
     // copy the item object
@@ -183,7 +188,9 @@ export const CartProvider = (props: ICartProviderProps) => {
         itemsIDs,
         add,
         remove,
-        clean
+        clean,
+        buyNowItem,
+        setBuyNowItem
       }}
     >
       {props.children}
