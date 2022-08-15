@@ -95,7 +95,7 @@ const Payment = (props: PaymentProps) => {
               <tbody>
                 <tr>
                   <th scope="row">{order.id}</th>
-                  <td>${order.total}</td>
+                  <td>${order.amount}</td>
                   <td>{(new Date(order.createdAt)).toLocaleDateString()}</td>
                   <td>{order.confirmed ? "confirmed" : "unconfirmed"}</td>
                 </tr>

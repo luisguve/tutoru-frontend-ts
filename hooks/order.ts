@@ -11,7 +11,7 @@ export interface IOrder {
   createdAt: string;
   updatedAt: string;
   id: number;
-  total: number;
+  amount: number;
   confirmed: boolean;
   courses: ICourseSummary[];
   ejercicios: IEjercicioSummary[];
