@@ -114,7 +114,7 @@ const MyLearning = (props: StaticProps) => {
                   orders.map(o => (
                     <tr key={o.id}>
                       <th scope="row">{o.id}</th>
-                      <td>${o.total}</td>
+                      <td>${o.amount}</td>
                       <td>{(new Date(o.createdAt)).toLocaleDateString()}</td>
                       <td>{o.confirmed ? "confirmed" : "unconfirmed"}</td>
                     </tr>

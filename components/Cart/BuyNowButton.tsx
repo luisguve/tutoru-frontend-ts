@@ -235,7 +235,7 @@ const BuyNowButton = ({ item }: BuyNowButtonProps) => {
       className="btn btn-sm btn-success py-2"
       data-bs-toggle="modal"
       data-bs-target="#buyNowModal"
-      onClick={e => setBuyNowItem(item)}
+      onClick={() => setBuyNowItem(item)}
     >Buy now</button>
   )
 }
