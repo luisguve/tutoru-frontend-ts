@@ -58,11 +58,8 @@ export const BuyNowTab = () => {
       return
     }
     const coursesIDs: string[] = []
-    const ejerciciosIDs: string[] = []
     if (item.kind === "course") {
       coursesIDs.push(item.id.toString())
-    } else {
-      ejerciciosIDs.push(item.id.toString())
     }
     const url = `${STRAPI}/api/masterclass/orders`
     const options = {
@@ -73,7 +70,6 @@ export const BuyNowTab = () => {
       },
       body: JSON.stringify({
         courses: coursesIDs,
-        ejercicios: ejerciciosIDs,
         method: ccSelected? "cc" : "paypal"
       })
     }

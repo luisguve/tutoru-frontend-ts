@@ -59,12 +59,9 @@ const CheckoutTab = () => {
       return
     }
     const coursesIDs: string[] = []
-    const ejerciciosIDs: string[] = []
     itemsIDs.map(({id}) => {
       if (id.startsWith(COURSE_PREFIX)) {
         coursesIDs.push(id.replace(COURSE_PREFIX, ""))
-      } else {
-        ejerciciosIDs.push(id)
       }
     })
     setSending(true)
@@ -83,7 +80,6 @@ const CheckoutTab = () => {
         },
         body: JSON.stringify({
           courses: coursesIDs,
-          ejercicios: ejerciciosIDs,
           method: ccSelected? "cc" : "paypal"
         })
       }

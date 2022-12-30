@@ -5,14 +5,12 @@ import { STRAPI } from "../lib/urls"
 
 interface IMyLearningContext {
   coursesIDs: ICourse[] | null;
-  ejerciciosIDs: IEjercicio[] | null;
   loadingItems: boolean;
   refresh: () => void;
 }
 
 const defaultState: IMyLearningContext = {
   coursesIDs: null,
-  ejerciciosIDs: null,
   loadingItems: false,
   refresh: () => {}
 }
@@ -27,12 +25,8 @@ interface ICourse {
     id: number
   }
 }
-interface IEjercicio {
-  id: number;
-}
 interface IMyLearning {
   courses: ICourse[];
-  ejercicios: IEjercicio[];
 }
 
 export const MyLearningProvider = (props: MyLearningProviderProps) => {
@@ -95,13 +89,10 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
       if (!data.courses || !data.courses.length) {
         console.log("No courses purchased (from local storage)")
       }
-      if (!data.ejercicios || !data.ejercicios.length) {
-        console.log("No ejercicios purchased (from local storage)")
-      }
     }
   }
   useEffect(() => {
-    // Intenta obtener los IDs de los ejercicios del local storage.
+    // Intenta obtener los IDs de los cursos del local storage.
     loadFromStorage()
     // Igualmente pide de todas maneras los IDs de articulos comprados.
     refresh()
@@ -109,7 +100,6 @@ export const MyLearningProvider = (props: MyLearningProviderProps) => {
   return (
     <MyLearningContext.Provider value={{
       coursesIDs: items ? items.courses : null,
-      ejerciciosIDs: items ? items.ejercicios : null,
       loadingItems,
       refresh
     }}>

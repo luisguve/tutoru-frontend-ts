@@ -5,7 +5,7 @@ import AuthContext from "../context/AuthContext"
 import MyLearningContext from "../context/MyLearningContext"
 import { cleanSession } from "../context/MyLearningContext"
 import { STRAPI } from "../lib/urls"
-import { IEjercicioSummary, ICourseSummary } from "../lib/content"
+import { ICourseSummary } from "../lib/content"
 
 export interface IOrder {
   createdAt: string;
@@ -14,12 +14,11 @@ export interface IOrder {
   amount: number;
   confirmed: boolean;
   courses: ICourseSummary[];
-  ejercicios: IEjercicioSummary[];
 }
 /**
 * Este hook verifica si el checkout_session es valido y por lo tanto la orden de compra
 * se completó exitosamente.
-* De ser asi, limpia los ejercicios IDS del localStorage y refresca la informacion.
+* De ser asi, limpia los cursos IDS del localStorage y refresca la informacion.
 */
 export const useOrder = (checkout_session: string  | string[] | undefined) => {
   const [order, setOrder] = useState<IOrder | null>(null)

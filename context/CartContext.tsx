@@ -10,7 +10,7 @@ export interface IItem {
   title: string;
   price: number;
   slug: string;
-  kind: "course" | "ejercicio";
+  kind: "course";
   category: {
     slug: string;
     title: string;
@@ -48,8 +48,7 @@ export interface ICartProviderProps {
 export const CartProvider = (props: ICartProviderProps) => {
   const { user } = useContext(AuthContext)
   const {
-    coursesIDs: coursesPurchased,
-    ejerciciosIDs: ejerciciosPurchased
+    coursesIDs: coursesPurchased
   } = useContext(MyLearningContext)
 
   const [items, setItems] = useState<IItem[]>(() => {
@@ -164,22 +163,7 @@ export const CartProvider = (props: ICartProviderProps) => {
         }
       })
     }
-    if (ejerciciosPurchased) {
-      itemsIDs.map(({id: itemID}) => {
-        if (itemID.startsWith(COURSE_PREFIX)) {
-          return
-        }
-        const userPurchasedThis = ejerciciosPurchased.some(({id}) => id.toString() === itemID)
-
-        if (userPurchasedThis) {
-          const item = items.find(i => i.id === itemID)
-          if (item) {
-            remove(item)
-          }
-        }
-      })
-    }
-  }, [coursesPurchased, ejerciciosPurchased])
+  }, [coursesPurchased])
 
   return (
     <CartContext.Provider

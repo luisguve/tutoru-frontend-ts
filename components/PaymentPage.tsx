@@ -4,7 +4,6 @@ import Head from "next/head"
 import Link from "next/link"
 
 import Layout from '../components/Layout'
-import EjercicioSummary from "../components/Category/EjercicioSummary"
 import CourseSummary from "../components/Category/CourseSummary"
 import { useOrder } from "../hooks/order"
 import { INavigationItem, ISiteInfo } from "../lib/metadata"
@@ -40,16 +39,10 @@ const Payment = (props: PaymentProps) => {
   const { order, loadingOrder } = useOrder(checkout_session)
 
   let coursesJSX: React.ReactNode[] | null = null;
-  let ejerciciosJSX: React.ReactNode[] | null = null;
   if (order) {
     coursesJSX = order.courses.map(c => (
       <div className="mb-4" key={c.slug}>
         <CourseSummary data={c} displayImage gotoCourse />
-      </div>
-    ))
-    ejerciciosJSX = order.ejercicios.map(e => (
-      <div className="mb-4" key={e.slug}>
-        <EjercicioSummary data={e} displayImage gotoSolution />
       </div>
     ))
   }
@@ -103,7 +96,6 @@ const Payment = (props: PaymentProps) => {
             </table>
             <h4 className="mt-5 text-center fs-2">New learning</h4>
             {coursesJSX}
-            {ejerciciosJSX}
             <Link href="/my-learning"><a>Ready to start learning?</a></Link>
           </>
         }

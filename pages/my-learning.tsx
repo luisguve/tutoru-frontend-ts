@@ -39,7 +39,7 @@ const MyLearning = (props: StaticProps) => {
 
   const {
     orders, loadingOrders,
-    learning: { courses, ejercicios }, loadingLearning
+    learning: { courses }, loadingLearning
   } = usePurchaseHistory()
 
   if (!user) {
@@ -85,7 +85,7 @@ const MyLearning = (props: StaticProps) => {
               Loading your courses...
             </h4>
           :
-            <ClassifiedItems courses={courses} ejercicios={ejercicios} />
+            <ClassifiedItems courses={courses} />
         }
         {
           loadingOrders ?

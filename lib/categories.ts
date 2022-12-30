@@ -16,7 +16,6 @@ export interface ICategory {
   title: string;
   subcategories: ICategory[];
   courses: ICourse[];
-  ejercicios: IEjericio[];
 }
 
 class CategoriesIndex {

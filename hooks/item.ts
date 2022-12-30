@@ -68,21 +68,3 @@ export const useCourseDetails = (id: number) => {
     loadingDetails
   }
 }
-
-export const useEjercicioComprado = (id: number) => {
-  const [ejercicioComprado, setEjercicioComprado] = useState<boolean | null>(null)
-  const { ejerciciosIDs } = useContext(MyLearningContext)
-
-  useEffect(() => {
-    // Verifica si el usuario adquirió el curso
-    if (ejerciciosIDs) {
-      if (ejerciciosIDs.some(e => e.id === id)) {
-        setEjercicioComprado(true)
-        return
-      }
-    }
-    setEjercicioComprado(false)
-  }, [ejerciciosIDs, id])
-
-  return ejercicioComprado
-}

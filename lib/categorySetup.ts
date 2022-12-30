@@ -9,10 +9,8 @@ import {
   buildBreadcrumb,
   ICourseSummary,
   ICategorySummary,
-  IEjercicioSummary,
   getCategorySummary,
   getCourseSummary,
-  getEjercicioSummary,
   indexCurrentCategory,
 } from "./content"
 
@@ -30,7 +28,7 @@ interface getCategoryDataProps {
 
 export interface ICategoryData {
   data: {
-    summary: ICourseSummary | ICategorySummary | IEjercicioSummary;
+    summary: ICourseSummary | ICategorySummary;
   };
   index: ICategory;
   isCategory: boolean;
@@ -59,7 +57,7 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
   const { currentCategory, isCategory } = indexCurrentCategory(index, path)
 
   // Ver si estamos en una categoria y obtener su resumen.
-  let summary: ICourseSummary | ICategorySummary | IEjercicioSummary
+  let summary: ICourseSummary | ICategorySummary
   // Sino, ver si estamos en la pagina de reproduccion de un curso
   // o en la pagina de presentación de un curso y obtener su título.
   let courseSlug: string = ""
@@ -74,7 +72,7 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
   if (isCategory) {
     summary = await getCategorySummary(currentCategory.slug)
     summary.kind = "category"
-  } else if (isCourse || isCourseRep) {
+  } else {
     if (isCourseRep) {
       // path: [{category}, courses, {slug}, view]
       courseSlug = path[path.length - 2]
@@ -88,11 +86,6 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
     .use(remarkHtml)
     .process(summary.long_description || ""))
     summary.kind = "course"
-  } else {
-    // Este es un ejercicio
-    const ejercicioslug = path[path.length - 1]
-    summary = await getEjercicioSummary(ejercicioslug)
-    summary.kind = "ejercicio"
   }
 
   // Elementos del componente breadcrumb
@@ -128,11 +121,9 @@ export async function getCategoryPaths({slug}: getCategoryPathsProps) {
   const base = [
     {params: {page: []}},
     // Indexar las paginas de los cursos pertenecientes a la seccion raiz
-    ...(root.courses.map(c => ({params: { page: ["course", c.slug] } }))),
+    ...(root.courses.map(c => ({params: { page: [c.slug] } }))),
     // Indexar las paginas de reproducción de los cursos
-    ...(root.courses.map(c => ({params: { page: ["course", c.slug, "view"] } }))),
-    // Indexar las paginas de los ejercicios
-    ...(root.ejercicios.map(e => ({params: { page: [e.slug] } }))),
+    ...(root.courses.map(c => ({params: { page: [c.slug, "view"] } }))),
   ]
 
   const index = root.subcategories.reduce((index, subcategory) => {

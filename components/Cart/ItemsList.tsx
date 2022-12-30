@@ -26,7 +26,6 @@ const ItemsList = (props: ItemsListProps): React.ReactElement | null => {
     )
   }
   const list = data.items.map(item => {
-    // if the item is a ejercicio, display it's category
     const label = item.kind === "course" ? item.title : `${item.category.title} - ${item.title}`
     return (
       <tr key={item.slug}>

@@ -6,7 +6,6 @@ import { ICategoryData } from "../../lib/categorySetup"
 import CoursePage from "./CoursePage"
 import CourseRep from "./CourseRep"
 import CategoryIndex from "./CategoryIndex"
-import EjercicioSummary from "./EjercicioSummary"
 
 interface CategoryPageProps {
   props: ICategoryData
@@ -30,8 +29,6 @@ const CategoryPage = ({props}: CategoryPageProps) => {
     case "category":
       component = <CategoryIndex data={summary} />
       break;
-    case "ejercicio":
-      component = <EjercicioSummary data={summary} onPage displayImage />
   }
 
   return (

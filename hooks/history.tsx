@@ -3,16 +3,15 @@ import { toast } from "react-toastify"
 
 import AuthContext from "../context/AuthContext"
 import { STRAPI } from "../lib/urls"
-import { ICourseSummary, IEjercicioSummary } from "../lib/content"
+import { ICourseSummary } from "../lib/content"
 import { IOrder } from "./order"
 
 interface ILearning {
   courses: ICourseSummary[] | null;
-  ejercicios: IEjercicioSummary[] | null;
 }
 
 /**
-* Este Hook pide a Strapi los ejercicios que ha adquirido el usuario
+* Este Hook pide a Strapi los cursds que ha adquirido el usuario
 * y sus ordenes de compra, ambas de manera asincrona e independiente.
 */
 export const usePurchaseHistory = () => {
@@ -21,8 +20,7 @@ export const usePurchaseHistory = () => {
   const [loadingOrders, setLoadingOrders] = useState(false)
 
   const defaultLearningState = {
-    courses: null,
-    ejercicios: null
+    courses: null
   }
   const [learning, setLearning] = useState<ILearning>(defaultLearningState)
   const [loadingLearning, setLoadingLearning] = useState(false)

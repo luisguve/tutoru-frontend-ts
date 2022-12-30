@@ -61,29 +61,11 @@ export interface ICategorySummary {
   thumbnail: IThumbnail[];
   courses: ICourseSummary[];
   featured_courses: ICourseSummary[];
-  ejercicios: IEjercicioSummary[];
-  featured_ejercicios: IEjercicioSummary[];
   courses_count: number;
-  ejercicios_count: number;
   subcategories: ICategorySummary[];
   kind: "category";
 }
 
-export interface IEjercicioSummary {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  slug: string;
-  createdAt: string;
-  updatedAt: string;
-  thumbnail: IThumbnail[];
-  category: {
-    slug: string;
-    title: string;
-  };
-  kind: "ejercicio";
-}
 
 interface ICategorySummaryRes {
   category: ICategorySummary;
@@ -99,16 +81,6 @@ export async function getCategorySummary(slug: string): Promise<ICategorySummary
   return summary.category
 }
 
-/**
-* Obtiene el resumen del ejercicio
-*/
-export async function getEjercicioSummary(slug: string): Promise<IEjercicioSummary> {
-  const url = `${STRAPI}/api/masterclass/ejercicios/${slug}`
-  const summary_res = await fetch(url)
-  const summary: IEjercicioSummary = await summary_res.json()
-
-  return summary
-}
 
 /**
 * Fetches the data for all the categories.
@@ -197,23 +169,15 @@ export function buildIndex({parentUrl, root}: ITree) {
   root.courses.map(c => {
     const coursePage: ITreeItem = {
       params: {
-        page: [...page, "course", c.slug]
+        page: [...page, c.slug]
       }
     }
     const courseRepPage: ITreeItem = {
       params: {
-        page: [...page, "course", c.slug, "view"]
+        page: [...page, c.slug, "view"]
       }
     }
     result.push(coursePage, courseRepPage)
-  })
-  root.ejercicios.map(e => {
-    const ejercicioPage: ITreeItem = {
-      params: {
-        page: [...page, e.slug]
-      }
-    }
-    result.push(ejercicioPage)
   })
   root.subcategories.map(subcategory => {
     const subIndex =  buildIndex({
@@ -355,7 +319,7 @@ export const buildBreadcrumb = (index: ICategory, path: string[]): IBuildBreadcr
     if (!found) {
       // En este punto la pagina no fue encontrada en este nivel del index, lo cual
       // puede significar que estamos en la pagina de un curso.
-      if (path.includes("course")) {
+      if (path.includes("curso")) {
         let courseSlug = ""
         if (path.includes("view")) {
           courseSlug = path[path.length - 2]
@@ -372,36 +336,19 @@ export const buildBreadcrumb = (index: ICategory, path: string[]): IBuildBreadcr
         } else {
           base = pages[pages.length - 1].url
         }
-        let newUrl = `${base}/course/${page}`
+        let newUrl = `${base}/${page}`
         let lastBreadcrumbElement: BreadcrumbElement = {
           name: course.title,
           url: newUrl
         }
         if (path.includes("view")) {
-          newUrl = `${base}/course/${path[path.length - 2]}`
+          newUrl = `${base}/${path[path.length - 2]}`
           lastBreadcrumbElement.url = newUrl
           pages.push(lastBreadcrumbElement)
           lastBreadcrumbElement = {
             name: "View",
             url: `${newUrl}/view`
           }
-        }
-        pages.push(lastBreadcrumbElement)
-      } else {
-        // La ruta no incluye course - esta pagina es de un ejercicio
-        const ejercicio = currentCategory.ejercicios.find(c => c.slug === page)
-        if (!ejercicio) {
-          return
-        }
-        let base
-        if (!pages.length) {
-          base =  `/${index.slug}`
-        } else {
-          base = pages[pages.length - 1].url
-        }
-        let lastBreadcrumbElement: BreadcrumbElement = {
-          name: ejercicio.title,
-          url: `${base}/${page}`
         }
         pages.push(lastBreadcrumbElement)
       }
