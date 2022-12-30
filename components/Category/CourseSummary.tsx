@@ -33,7 +33,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
     imgUrl = imgPath
   }
 
-  const courseUrl = `/${category.slug}/course/${data.slug}`
+  const courseUrl = `/${category.slug}/${data.slug}`
   const linkToCourse = (
     <Link href={courseUrl.concat("/view")}>
       <a className="btn btn-sm btn-success py-2 d-flex align-items-center justify-content-center">Go to course</a>
@@ -68,7 +68,7 @@ const CourseSummary = (props: CourseSummaryProps) => {
               )
             }
           </h5>
-          {linkToCategory}
+          {/*linkToCategory*/}
         </div>
       </div>
       {
