@@ -160,7 +160,7 @@
       top: -21px;
       right: -21px;
       background: #fff;
-      border 2px solid #40b3ff;
+      border: 2px solid #40b3ff;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -169,7 +169,7 @@
   }
 
   .logo, p {
-    transition:; all .5s ease;
+    transition: all .5s ease;
   }
   .logo {
     font-size: 48px;
