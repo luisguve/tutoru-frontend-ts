@@ -39,11 +39,11 @@ const CourseSummary = (props: CourseSummaryProps) => {
       <a className="btn btn-sm btn-success py-2 d-flex align-items-center justify-content-center">Go to course</a>
     </Link>
   )
-  const linkToCategory = (
+  /*const linkToCategory = (
     <Link href={`/${category.slug}`}>
       <a className="btn btn-sm btn-primary my-1">{category.title}</a>
     </Link>
-  )
+  )*/
 
   const lecturesNum = data.modules.reduce((total, {lectures}) => total + lectures.length, 0)
   return (
