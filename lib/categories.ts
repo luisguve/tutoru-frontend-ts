@@ -5,12 +5,18 @@ export interface ICourse {
   slug: string;
   title: string;
 }
+export interface IEjericio {
+  id: number;
+  slug: string;
+  title: string;
+}
 export interface ICategory {
   id: number;
   slug: string;
   title: string;
   subcategories: ICategory[];
   courses: ICourse[];
+  ejercicios: IEjericio[];
 }
 
 class CategoriesIndex {

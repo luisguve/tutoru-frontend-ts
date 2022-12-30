@@ -17,6 +17,10 @@ module.exports = {
   },
   "rules": {
     "no-implicit-coercion": "error",
-    "no-var": "error"
+    "no-var": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  },
+  "globals": {
+    "JSX": true
   }
 }

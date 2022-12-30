@@ -3,14 +3,12 @@ import { toast } from "react-toastify"
 
 import AuthContext from "../context/AuthContext"
 import { STRAPI } from "../lib/urls"
-import { ICourseSummary, ICoursesRes } from "../lib/content"
+import { ICourseSummary, IEjercicioSummary } from "../lib/content"
 import { IOrder } from "./order"
 
-interface ILearningRes {
-  course: ICourseSummary
-}
 interface ILearning {
-  courses: ILearningRes[] | null
+  courses: ICourseSummary[] | null;
+  ejercicios: IEjercicioSummary[] | null;
 }
 
 /**
@@ -22,7 +20,11 @@ export const usePurchaseHistory = () => {
   const [orders, setOrders] = useState<IOrder[] | null>(null)
   const [loadingOrders, setLoadingOrders] = useState(false)
 
-  const [learning, setLearning] = useState<ILearning>({courses: null})
+  const defaultLearningState = {
+    courses: null,
+    ejercicios: null
+  }
+  const [learning, setLearning] = useState<ILearning>(defaultLearningState)
   const [loadingLearning, setLoadingLearning] = useState(false)
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export const usePurchaseHistory = () => {
       } catch (err) {
         toast("Could not load your account information")
         console.log(err)
-        setLearning({courses: null})
+        setLearning(defaultLearningState)
       }
       setLoadingLearning(false)
     }

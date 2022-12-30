@@ -1,15 +1,15 @@
 import { useContext, useState, useEffect } from "react"
 
-import AuthContext from "../context/AuthContext"
-import BasketContext, { IItem } from "../context/BasketContext"
+import AuthContext from "../../context/AuthContext"
+import CartContext, { IItem, COURSE_PREFIX } from "../../context/CartContext"
 
 interface AddButtonProps {
   item: IItem
 }
 
-const AddButton = ({ item }: AddButtonProps) => {
+const AddToCartButton = ({ item }: AddButtonProps) => {
   const { user } = useContext(AuthContext)
-  const { itemsIDs, add, remove } = useContext(BasketContext)
+  const { itemsIDs, add, remove } = useContext(CartContext)
 
   const [added, setAdded] = useState<boolean>(itemsIDs.some(({id}) => id === item.id))
 
@@ -18,16 +18,20 @@ const AddButton = ({ item }: AddButtonProps) => {
     setAdded(true)
   }
   const removeFromCart = () => {
-    remove(item.id)
+    remove(item)
     setAdded(false)
   }
   // Este hook cambia el valor del estado "agregado" a false si se ha quitado
   // este articulo desde el carrito de compras.
   useEffect(() => {
-    setAdded(itemsIDs.some(({id}) => id === item.id))
-  }, [itemsIDs])
+    let prefix = ""
+    if (item.kind === "course") {
+      prefix = COURSE_PREFIX
+    }
+    setAdded(itemsIDs.some(({id}) => id === `${prefix}${item.id}`))
+  }, [itemsIDs, item.id, item.kind])
   if (!user) {
-    return <p className="mb-0">Login to purchase this course</p>
+    return <p className="mb-0 small">Login to purchase this course</p>
   }
   return (
     added ?
@@ -43,4 +47,4 @@ const AddButton = ({ item }: AddButtonProps) => {
   )
 }
 
-export default AddButton
+export default AddToCartButton

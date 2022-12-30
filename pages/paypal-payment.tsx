@@ -19,7 +19,7 @@ export const getStaticProps = async (): Promise<{props: StaticProps}> => {
 const Payment = (props: StaticProps) => {
   const { navigation, siteInfo } = props
 
-  return <PaymentPage navigation={navigation} siteInfo={siteInfo} method="cc" />
+  return <PaymentPage navigation={navigation} siteInfo={siteInfo} method="paypal" />
 }
 
 export default Payment

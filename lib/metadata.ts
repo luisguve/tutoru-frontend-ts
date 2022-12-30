@@ -28,15 +28,15 @@ class Metadata {
       return this._navitems
     }
     const navitems = await categoriesIndex.navigation()
-    return [
+    const rootNavigation = [
       {
         title: "categories",
         slug: "#",
         subcategories: navitems
       }
     ]
-    this._navitems = navitems
-    return navitems
+    this._navitems = rootNavigation
+    return rootNavigation
   }
   loadSiteInfo = async (): Promise<ISiteInfo> => {
     if (this._siteInfo) {

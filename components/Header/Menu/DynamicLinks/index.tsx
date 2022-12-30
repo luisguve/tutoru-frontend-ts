@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 
@@ -14,7 +14,7 @@ const DynamicLinks = (props: DynamicLinksProps) => {
   return (
     <>
       {
-        navigation.map(item => renderMenuItem({item, depth: 1, parentUrl: ""}))
+        navigation.map(item => <RenderMenuItem key={item.slug} item={item} depth={1} parentUrl="" />)
       }
     </>
   )
@@ -82,7 +82,9 @@ interface MenuItemData {
   parentUrl: string;
 }
 // Renderiza el menu y los submenus recursivamente
-const renderMenuItem = (props: MenuItemData): React.ReactNode => {
+const RenderMenuItem = (props: MenuItemData) => {
+  const [ariaExpanded, setAriaExpanded] = useState(false)
+  const [showClass, setShowClass] = useState("")
   const { item, depth, parentUrl } = props
 
   const { pathname } = useRouter()
@@ -96,11 +98,9 @@ const renderMenuItem = (props: MenuItemData): React.ReactNode => {
   }
   item.permalink = permalink
   if (item.subcategories.length > 0) {
-    submenuItems = item.subcategories.map(item => renderMenuItem({
-      item,
-      depth: depth + 1,
-      parentUrl: permalink
-    }))
+    submenuItems = item.subcategories.map(item => (
+      <RenderMenuItem key={item.slug} item={item} depth={depth + 1} parentUrl={permalink} />
+    ))
   }
   if (depth >= 2) {
     if (!submenuItems) {
@@ -130,8 +130,6 @@ const renderMenuItem = (props: MenuItemData): React.ReactNode => {
   if (submenuItems) {
     liClass += " dropdown"
   }
-  const [ariaExpanded, setAriaExpanded] = useState(false)
-  const [showClass, setShowClass] = useState("")
   const showMenu = () => {
     if (!submenuItems) {
       return

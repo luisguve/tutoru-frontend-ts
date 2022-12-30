@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react"
 
-import BasketContext, { IItem } from "../context/BasketContext"
+import CartContext, { IItem } from "../context/CartContext"
 
 export interface IData {
   items: IItem[],
@@ -10,7 +10,7 @@ export interface IData {
 // Este hook retorna los articulos en el carrito como una lista, junto con
 // el precio total a pagar
 export const useData = () => {
-  const { items } = useContext(BasketContext)
+  const { items } = useContext(CartContext)
   const [data, setData] = useState<IData | null>(null)
 
   useEffect(() => {

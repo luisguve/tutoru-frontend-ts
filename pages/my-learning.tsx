@@ -1,12 +1,10 @@
-import { useContext, useState, useEffect } from "react"
-import Link from "next/link"
+import { useContext } from "react"
 import Head from "next/head"
 
-import { STRAPI } from "../lib/urls"
 import AuthContext from "../context/AuthContext"
 import Layout from "../components/Layout"
 import { usePurchaseHistory } from "../hooks/history"
-import CourseSummary from "../components/Category/CourseSummary"
+import ClassifiedItems from "../components/Category/ClassifiedItems"
 import metadata, { INavigationItem, ISiteInfo } from "../lib/metadata"
 
 const breadCrumb = [
@@ -41,7 +39,7 @@ const MyLearning = (props: StaticProps) => {
 
   const {
     orders, loadingOrders,
-    learning: { courses }, loadingLearning
+    learning: { courses, ejercicios }, loadingLearning
   } = usePurchaseHistory()
 
   if (!user) {
@@ -83,21 +81,11 @@ const MyLearning = (props: StaticProps) => {
         }
         {
           loadingLearning ?
-          <h4 className="text-center">
-            Loading your courses...
-          </h4>
-          :
-          (!courses || !courses.length) ?
             <h4 className="text-center">
-              Here will appear your courses
+              Loading your courses...
             </h4>
           :
-            <div className="my-5">
-              <h2 className="text-center mb-3">Your learning</h2>
-              {
-                courses.map(({course:c}) => <CourseSummary data={c} key={c.slug} gotoCourse displayImage />)
-              }
-            </div>
+            <ClassifiedItems courses={courses} ejercicios={ejercicios} />
         }
         {
           loadingOrders ?
@@ -126,7 +114,7 @@ const MyLearning = (props: StaticProps) => {
                   orders.map(o => (
                     <tr key={o.id}>
                       <th scope="row">{o.id}</th>
-                      <td>${o.total}</td>
+                      <td>${o.amount}</td>
                       <td>{(new Date(o.createdAt)).toLocaleDateString()}</td>
                       <td>{o.confirmed ? "confirmed" : "unconfirmed"}</td>
                     </tr>

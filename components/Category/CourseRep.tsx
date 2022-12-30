@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext, useRef } from "react"
 import { useRouter } from "next/router"
-import Head from "next/head"
 import Hls from 'hls.js';
 
-import { Ilecture } from "../../lib/content"
+import { IModule, Ilecture } from "../../lib/content"
 
 import MyLearningContext from "../../context/MyLearningContext"
 import AuthContext from "../../context/AuthContext"
@@ -14,29 +13,28 @@ import { Playlist } from "./LecturesList"
 interface CourseRepProps {
   data: {
     id: number;
-    title: string,
-    lectures: Ilecture[];
-  }
+    title: string;
+    modules: IModule[];
+  };
 }
 
 interface IErrData {
-  msg: string,
-  lectureID?: number
+  msg: string;
+  lectureID?: number;
 }
 interface IDataRep {
-  currentLectureID: number,
-  PlayAuth: string,
-  VideoId: string,
-  classesCompleted: Ilecture[]
+  currentLectureID: number;
+  PlayAuth: string;
+  classesCompleted: Ilecture[];
 }
 
 const CourseRep = ({data}: CourseRepProps) => {
-  const { id: courseID, title: courseTitle, lectures } = data
+  const { id: courseID, title: courseTitle, modules } = data
   const [loading, setLoading] = useState(false)
   const [dataRep, setDataRep] = useState<IDataRep | null>(null)
   const [errData, setErrData] = useState<IErrData | null>(null)
   const router = useRouter()
-  const { coursesIDs, loadingItems } = useContext(MyLearningContext)
+  const { loadingItems } = useContext(MyLearningContext)
   const coursePurchased = useCoursePurchased(courseID)
   const { user } = useContext(AuthContext)
   const fetchDataRep = async (lectureID?: number) => {
@@ -50,7 +48,7 @@ const CourseRep = ({data}: CourseRepProps) => {
     } else {
       url = `${STRAPI}/api/masterclass/courses/${courseID}/resume-course`
     }
-    const options: RequestInit = {
+    const options = {
       headers: { Authorization: `Bearer ${user.token}` }
     }
     try {
@@ -80,18 +78,18 @@ const CourseRep = ({data}: CourseRepProps) => {
     if (coursePurchased && !dataRep) {
       fetchDataRep()
     }
-  }, [loadingItems, coursePurchased, user])
+  }, [loadingItems,coursePurchased,user])
   return (
     <div>
       {
-        <div className="row mx-0 justify-content-end">
+        <div className="row mx-0 justify-content-end align-items-start">
           <div className="col-12">
             <h1 className="fs-2">{courseTitle}</h1>
           </div>
-          <div className="col-lg-8 px-0 px-md-2" style={{minHeight: 340}}>
+          <div className="col-lg-8 px-0 px-md-2 mb-3">
             {
               (loading || loadingItems) ?
-                <div className="bg-dark d-flex flex-column align-items-center justify-content-center h-100">
+                <div className="bg-dark d-flex flex-column align-items-center justify-content-center h-100" style={{minHeight: 340}}>
                   <h3 className="text-light">Loading...</h3>
                 </div>
               : errData ?
@@ -104,23 +102,23 @@ const CourseRep = ({data}: CourseRepProps) => {
                 </div>
               : dataRep &&
                 <>
-                  <Reproductor
+                  <Player
                     PlayAuth={dataRep.PlayAuth}
                   />
                   <VideoMetadata
-                    lectures={lectures}
+                    modules={modules}
                     current={dataRep.currentLectureID}
                   />
                 </>
             }
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-4 p-md-0">
             <Playlist
-              lectures={lectures}
+              playable
+              modules={modules}
               changeLecture={fetchDataRep}
               currentLectureID={dataRep ? dataRep.currentLectureID : null}
               courseID={courseID}
-              classesCompleted={dataRep ? dataRep.classesCompleted : []}
             />
           </div>
         </div>
@@ -131,12 +129,11 @@ const CourseRep = ({data}: CourseRepProps) => {
 
 export default CourseRep
 
-interface ReproductorProps {
-  PlayAuth: string,
-  VideoId?: string
+interface PlayerProps {
+  PlayAuth: string;
 }
 
-const Reproductor = (props: ReproductorProps) => {
+const Player = (props: PlayerProps) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const src = props.PlayAuth;
 
@@ -163,7 +160,7 @@ const Reproductor = (props: ReproductorProps) => {
         hls.destroy();
       }
     };
-  }, [videoRef]);
+  }, [videoRef,src]);
 
   return (
     <video
@@ -175,20 +172,25 @@ const Reproductor = (props: ReproductorProps) => {
 }
 
 interface VideoMetadataProps {
-  lectures: Ilecture[],
-  current: number
+  modules: IModule[];
+  current: number;
 }
 
 const VideoMetadata = (props: VideoMetadataProps) => {
-  const { lectures, current } = props
+  const { modules, current } = props
+
+  const lectures: Ilecture[] = modules.reduce((lectures, module) => {
+    return lectures.concat(module.lectures)
+  }, [] as Ilecture[])
+
   let title = "0 - Sin titulo"
-  for (var i = lectures.length - 1; i >= 0; i--) {
+  for (let i = lectures.length - 1; i >= 0; i--) {
     if (lectures[i].id === current) {
       title = `${i+1} - ` + lectures[i].title
       break
     }
   }
   return (
-    <h4 className="mt-3">{title}</h4>
+    <h4 className="mt-1 mt-md-3 mb-0 px-2 px-sm-4 px-lg-0 fs-6 fs-md-4">{title}</h4>
   )
 }

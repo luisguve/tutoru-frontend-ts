@@ -8,13 +8,12 @@ import {
 import {
   ReviewForm, Reviews, ReviewsConfigContext, ReviewsProvider
 } from "strapi-ratings-client"
-import { PlaylistSummary } from "./LecturesList"
+import { Playlist } from "./LecturesList"
 import CourseSummary from "./CourseSummary"
 import AuthContext from "../../context/AuthContext"
 import { useCoursePurchased } from "../../hooks/item"
 import { STRAPI } from "../../lib/urls"
 import { ICourseSummary } from "../../lib/content"
-
 
 
 const Tabs = dynamic(import('react-tabs').then(mod => mod.Tabs), { ssr: false }) // disable ssr
@@ -51,10 +50,10 @@ const CourseDesc = (props: CoursePageProps) => {
   useEffect(() => {
     setReviewsUser(user)
     setCommentsUser(user)
-  }, [user])
+  }, [user,setReviewsUser,setCommentsUser])
   useEffect(() => {
     setCanPostReview(coursePurchased === true)
-  }, [coursePurchased])
+  }, [coursePurchased,setCanPostReview])
   return (
     <>
       <CourseSummary onPage displayImage data={data} />
@@ -76,7 +75,7 @@ const CourseDesc = (props: CoursePageProps) => {
           <Comments />
         </TabPanel>
         <TabPanel>
-          <PlaylistSummary data={data.lectures} courseID={data.id} />
+          <Playlist modules={data.modules} courseID={data.id} />
         </TabPanel>
       </Tabs>
     </>

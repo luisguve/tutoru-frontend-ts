@@ -351,11 +351,6 @@ acorn@^8.7.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.0.tgz#90951fde0f8f09df93549481e5fc141445b791cf"
   integrity sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==
 
-add-zero@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/add-zero/-/add-zero-1.0.0.tgz#88e221696717f66db467672f3f9aa004de9f1a2c"
-  integrity sha1-iOIhaWcX9m20Z2cvP5qgBN6fGiw=
-
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
@@ -1318,14 +1313,6 @@ for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
   integrity sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=
-
-format-duration@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/format-duration/-/format-duration-1.4.0.tgz#6ad86c88f504150873cd28ca82d26a26898d9971"
-  integrity sha512-Mcg3hOAiKxo6JRBgfrQ+sbVvr3D9/4wE7eDQXx3WV2d/yKmrcHXHJS4OhrqVeg+iiFE2Op+pHhdOkQUl8yIclw==
-  dependencies:
-    add-zero "^1.0.0"
-    parse-ms "^1.0.1"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -2593,11 +2580,6 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
-parse-ms@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/parse-ms/-/parse-ms-1.0.1.tgz#56346d4749d78f23430ca0c713850aef91aa361d"
-  integrity sha1-VjRtR0nXjyNDDKDHE4UK75GqNh0=
-
 pascalcase@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
@@ -3121,10 +3103,10 @@ strapi-comments-client@^2.0.3:
   dependencies:
     date-fns "^2.28.0"
 
-strapi-ratings-client@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/strapi-ratings-client/-/strapi-ratings-client-2.0.3.tgz#5c9c6ca4b6810df23776dd86bfcac8ae6edca29a"
-  integrity sha512-WUwYa3p1StgjHfk+0a4GZ4NCY0V93MeQJpI33CeQVoXdwiSlpUCvMiNP/aavgFcuXQ4Uzs98f+tory7pEXw0VA==
+strapi-ratings-client@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/strapi-ratings-client/-/strapi-ratings-client-2.0.5.tgz#a331527d974b1a4aaa79fd76d50f8fdee1a3c7ea"
+  integrity sha512-sD4NXr12faZXLWQqxD/06n7GFbr61w816SG1bIwfnm1wSa5DJW3n8WgFNVJRjJjqYhBAeTNSi+famkk/ne2Fmg==
   dependencies:
     date-fns "^2.28.0"
     react-awesome-stars-rating "^0.6.0"

@@ -3,17 +3,22 @@ import type { AppProps } from 'next/app'
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+
 import '../styles/global.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { AuthProvider } from "../context/AuthContext"
 import { MyLearningProvider } from "../context/MyLearningContext"
-import { BasketProvider } from "../context/BasketContext"
+import { CartProvider } from "../context/CartContext"
 import { LoginModal, SignupModal } from "../components/LoginModal"
-import Basket from "../components/Basket"
+import Cart from "../components/Cart"
 
 import * as ga from '../lib/ga'
+
+config.autoAddCss = false
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -38,12 +43,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <MyLearningProvider>
-        <BasketProvider>
+        <CartProvider>
           <Component {...pageProps} />
-          <Basket />
+          <Cart />
           <LoginModal />
           <SignupModal />
-        </BasketProvider>
+        </CartProvider>
       </MyLearningProvider>
     </AuthProvider>
   )

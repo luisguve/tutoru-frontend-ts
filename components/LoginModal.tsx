@@ -1,8 +1,7 @@
-import { useState, useContext, createRef } from "react"
+import React, { useState, useContext } from "react"
 import { toast } from 'react-toastify';
 
 import AuthContext from "../context/AuthContext"
-import styles from "../styles/Login.module.css"
 import { STRAPI } from "../lib/urls"
 
 interface FormInputsProps {
@@ -86,12 +85,6 @@ const RegisterForm = (props: FormInputsProps) => {
       toast(data.error.message)
       setSending(false)
     });
-  }
-  let extraProps = {}
-  if (!validInputs()) {
-    extraProps = {
-      disabled: "disabled"
-    }
   }
   return (
     <form className="d-flex flex-column" onSubmit={handleSubmit}>
@@ -195,6 +188,7 @@ const LoginForm = (props: FormInputsProps) => {
       close()
     })
     .catch(error => {
+      console.log(error)
       toast("Invalid email or password")
       setSending(false)
     });
@@ -243,7 +237,7 @@ interface AuthModalProps {
   headerLabel: string;
   headerLabelID: string;
   id: string;
-  FormInputs: (props: FormInputsProps) => JSX.Element;
+  FormInputs: (_: FormInputsProps) => JSX.Element;
 }
 const AuthModal = (props: AuthModalProps) => {
   const { headerLabel, headerLabelID, id, FormInputs } = props

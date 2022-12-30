@@ -1,5 +1,8 @@
+import React from "react"
 import Link from "next/link"
+
 import { ICategorySummary } from "../../lib/content"
+import styles from "../../styles/Category.module.scss"
 
 interface SubcategoriesProps {
   data: ICategorySummary[];
@@ -23,27 +26,32 @@ const Subcategories = (props: SubcategoriesProps) => {
 
       return (
         <div key={c.slug}>
-          <h5 style={fontSize ? {fontSize} : undefined}>
+          <h5
+            style={fontSize ? {fontSize} : undefined}
+            className={styles["category-tree"] + " ms-1 text-start"}
+          >
             <Link href={`${parentUrl}/${c.slug}`}>
-              <a className="ms-1">{c.title} {
+              <a>{c.title} {
                 !subcategoriesJSX && `(${c.courses.length})`
               }</a>
             </Link>
-            {
-              subcategoriesJSX &&
-              <div className="ms-4">
-                 {subcategoriesJSX}
-              </div>
-            }
           </h5>
+          {
+            subcategoriesJSX &&
+            <div className="ms-4 d-flex flex-column align-items-start">
+               {subcategoriesJSX}
+            </div>
+          }
         </div>
       )
     })
   }
   return (
-    <>
-      {recursiveSubcategory({parentUrl, data})}
-    </>
+    <div className="d-flex flex-column align-items-center">
+      <div className="d-flex flex-column align-items-start">
+        {recursiveSubcategory({parentUrl, data})}
+      </div>
+    </div>
   )
 }
 

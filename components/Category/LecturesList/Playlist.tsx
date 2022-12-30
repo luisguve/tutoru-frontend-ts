@@ -1,42 +1,116 @@
-import { useContext } from "react"
-import { toast } from "react-toastify"
-import Link from 'next/link'
-import formatDuration from "format-duration"
+import React, { useContext } from "react"
 
+import formatDuration from "../../../lib/duration"
 import AuthContext from "../../../context/AuthContext"
-import { Ilecture } from "../../../lib/content"
+import PlaylistContext, { PlaylistProvider } from "../../../context/PlaylistContext"
+import { IModule, Ilecture } from "../../../lib/content"
 import { STRAPI } from "../../../lib/urls"
 import styles from "../../../styles/PaginaCurso.module.scss"
-import { useCoursePurchased, useClassesCompleted } from "../../../hooks/item"
 
 interface PlaylistProps {
-  lectures: Ilecture[];
-  changeLecture: (lectureID?: number) => Promise<void>;
-  currentLectureID: number | null;
+  modules: IModule[];
   courseID: number;
-  classesCompleted: Ilecture[];
+  playable?: boolean;
+  changeLecture?: (_?: number) => Promise<void>;
+  currentLectureID?: number | null;
 }
 const Playlist = (props: PlaylistProps) => {
+  const {
+    modules,
+    changeLecture,
+    currentLectureID,
+    courseID,
+    playable
+  } = props
+
+  return (
+    <div className="accordion" id="playlist-summary-accordion">
+      {
+        modules.map((module, idx) => {
+
+          let isCurrentModule: boolean = false
+
+          if (currentLectureID !== null) {
+            isCurrentModule = module.lectures.some(l => l.id === currentLectureID)
+          }
+
+          let startCountAt: number = 0
+          for (let i = 0; i < idx; i++) {
+            startCountAt += modules[i].lectures.length
+          }
+
+          return (
+            <div className="accordion-item" key={`module-${module.id}`}>
+              <h2 className="accordion-header" id={`playlist-accordion-header-${idx}`}>
+                <button
+                  className={"accordion-button" + (!isCurrentModule ? " collapsed" : "")}
+                  aria-expanded={!isCurrentModule ? "false" : "true"}
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#playlist-accordion-body-${idx}`}
+                  aria-controls={`playlist-accordion-body-${idx}`}
+                >
+                  {module.title || `${idx+1}. Untitled module`} - {formatDuration(module.duration)}
+                </button>
+              </h2>
+              <div
+                id={`playlist-accordion-body-${idx}`}
+                className={"accordion-collapse collapse" + (isCurrentModule ? " show" : "")}
+                aria-labelledby={`playlist-accordion-header-${idx}`}
+              >
+                <div className="accordion-body p-0">
+                  <ModuleLectures
+                    playable={playable}
+                    startCountAt={startCountAt}
+                    lectures={module.lectures}
+                    changeLecture={changeLecture}
+                    currentLectureID={currentLectureID}
+                    courseID={courseID}
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        })
+      }
+    </div>
+  )
+}
+
+interface ModuleLecturesProps {
+  lectures: Ilecture[];
+  courseID: number;
+  playable?: boolean;
+  changeLecture?: (_?: number) => Promise<void>;
+  currentLectureID?: number | null;
+  startCountAt: number;
+}
+const ModuleLectures = (props: ModuleLecturesProps) => {
   const {
     lectures,
     changeLecture,
     currentLectureID,
     courseID,
-    classesCompleted
+    playable,
+    startCountAt
   } = props
+
+  const { classesCompleted, toggleClassCompleted } = useContext(PlaylistContext)
+
   const { user } = useContext(AuthContext)
+
   return (
-    <ol className="list-unstyled">
+    <ol className="list-unstyled m-0">
       {
         lectures.map((lecture, idx) => {
           const completed = classesCompleted.some(l => l.id === lecture.id)
           const isCurrent = currentLectureID === lecture.id
-          let classCurrent = styles["no-video-actual"]
+          let classCurrent = playable ? styles["no-video-actual"] : ""
           if (isCurrent) {
             classCurrent = "bg-dark text-light"
           }
           const handleClick = () => {
-            if (!user) {
+            if (!user || !changeLecture) {
               return
             }
             if (isCurrent) {
@@ -44,11 +118,12 @@ const Playlist = (props: PlaylistProps) => {
             }
             changeLecture(lecture.id)
           }
-          const marcarVisto = async e => {
+          const marcarVisto = async (e: React.ChangeEvent<HTMLInputElement>) => {
             e.stopPropagation()
             if (!user) {
               return
             }
+            toggleClassCompleted(lecture.id)
             const url = `${STRAPI}/api/masterclass/courses/${courseID}/check-lecture?lecture=${lecture.id}`
             const options = {
               method: "PUT",
@@ -67,20 +142,25 @@ const Playlist = (props: PlaylistProps) => {
           }
           return (
             <li
-              className={"px-2 border-top d-flex align-items-center ".concat(classCurrent)}
+              className={`${idx!==0?"border-top":""} px-2 d-flex align-items-center ${classCurrent}`}
               key={lecture.id}
-              onClick={handleClick}
+              onClick={playable ? handleClick : undefined}
             >
-              <input
-                type="checkbox"
-                className={"me-1 ".concat(styles.checkbox)}
-                onClick={marcarVisto}
-                defaultChecked={completed}
-              />
-              <span className="me-1 me-sm-2">{idx + 1}.</span>
-              <div className="pt-3">
+              <label className={styles["checkmark-container"]} onClick={e => e.stopPropagation()}>
+                <input
+                  type="checkbox"
+                  className={"me-1 ".concat(styles.checkbox)}
+                  onChange={marcarVisto}
+                  checked={completed}
+                />
+                <span
+                  className={styles["checkmark"]+(completed?` ${styles["checked"]}` : "")}
+                ></span>
+              </label>
+              <span className="me-1 me-sm-2">{startCountAt + idx + 1}.</span>
+              <div className="pt-3 d-flex flex-column align-items-end flex-grow-1">
                 <p className="mb-0 small" style={{wordBreak: "break-all"}}>{lecture.title}</p>
-                <p className="small">{formatDuration(lecture.video.duration*1000)}</p>
+                <p className="small fst-italic fw-light">{formatDuration(lecture.video.duration)}</p>
               </div>
             </li>
           )
@@ -90,4 +170,12 @@ const Playlist = (props: PlaylistProps) => {
   )
 }
 
-export default Playlist
+const PlaylistWrapper = (props: PlaylistProps) => {
+  return (
+    <PlaylistProvider courseID={props.courseID}>
+      <Playlist {...props} />
+    </PlaylistProvider>
+  )
+}
+
+export default PlaylistWrapper

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import Link from "next/link"
 
 import authContext from "../context/AuthContext"
@@ -10,11 +10,11 @@ const Footer = () => {
     <footer className="py-4">
       {
         user &&
-        <p className="user-info small">
-          <Link href="/my-learning"><a>Logged in as {user.email}</a></Link>
+        <p className="user-info" style={{fontSize: 12}}>
+          <Link href="/my-learning"><a className="text-white">Logged in as {user.email}</a></Link>
         </p>
       }
-      <p className="m-0 fs-6">Tutor universitario - copyright 2021</p>
+      <p className="m-0" style={{fontSize: 12}}>Tutor universitario - copyright 2021</p>
     </footer>
   )
 }

@@ -1,5 +1,7 @@
-@media screen and (min-width: 768px) {
-  .Icono {
+
+.Icono {
+  background: white;
+  @media screen and (min-width: 768px) {
     z-index: 1021;
     position: fixed;
     right: 10px;
@@ -7,52 +9,90 @@
   }
 }
 
-.Icono {
-  background: white;
-}
-.Contenedor__Carrito {
-  display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background: rgba(0,0,79,0.8);
-  z-index: 1022;
-}
-.Contenedor__Carrito.abierto {
-  display: block;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.sending {
+  .type {
+    cursor: initial;
+    &:hover {
+      border-color: #e8ebed;
+      .logo, p {
+        color: #8a959c;
+      }
+    }
+    &.selected {
+      border-color: #40b3ff;
+      background: rgba(64, 179, 255, .1);
+      .logo {
+        color: #40b3ff;
+      }
+      p {
+        color: #28333b;
+      }
+    }
+  }
 }
 
-.Contenedor__Ventana {
+.type {
+  width: 47%;
   position: relative;
-}
+  background: #f2f4f7;
+  border: 2px solid #e8ebed;
+  padding: 25px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all .5s ease;
 
-.Ventana[data-ocultar="true"] {
-  display: none;
-}
-.Ventana[data-ocultar="false"] {
-  display: flex;
-}
+  &:hover {
+    border-color: #28333b;
+    .logo, p {
+      color: #28333b;
+    }
+  }
+  &.selected {
+    border-color: #40b3ff;
+    background: rgba(64, 179, 255, .1);
+    .logo {
+      color: #40b3ff;
+    }
+    p {
+      color: #28333b;
+    }
 
-.Ventana {
-  width: 95vw;
-  background: rgba(256,256,256,0.9);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  @media screen and (min-width: 768px) {
-    padding: 3rem;
-    width: 60vw;
+    .check {
+      font-weight: 900;
+      position: absolute;
+      height: 40px;
+      width: 40px;
+      top: -21px;
+      right: -21px;
+      background: #fff;
+      border: 2px solid #40b3ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
-  @media screen and (min-width: 992px) {
-    width: 40vw;
+
+  .logo, p {
+    transition: all .5s ease;
+  }
+  .logo {
+    font-size: 48px;
+    color: #8a959c;
+  }
+
+  p {
+    margin-bottom: 0;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: .5px;
+    color: #8a959c;
   }
 }
+<<<<<<< HEAD
 
 .closeBtn {
   position: absolute;
