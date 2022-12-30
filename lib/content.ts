@@ -319,7 +319,7 @@ export const buildBreadcrumb = (index: ICategory, path: string[]): IBuildBreadcr
     if (!found) {
       // En este punto la pagina no fue encontrada en este nivel del index, lo cual
       // puede significar que estamos en la pagina de un curso.
-      if (path.includes("curso")) {
+      if (path.some(s => s.includes("curso"))) {
         let courseSlug = ""
         if (path.includes("view")) {
           courseSlug = path[path.length - 2]

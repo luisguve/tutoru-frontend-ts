@@ -64,9 +64,9 @@ async ({ params, slug }: getCategoryDataProps): Promise<ICategoryData | null> =>
 
   let isCourseRep = false
   let isCourse = false
-  if (path.includes("course") && path.includes("view")) {
+  if (path.includes("view")) {
     isCourseRep = true
-  } else if (path.includes("course")) {
+  } else {
     isCourse = true
   }
   if (isCategory) {
